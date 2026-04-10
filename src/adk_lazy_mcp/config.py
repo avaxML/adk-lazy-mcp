@@ -26,6 +26,18 @@ class ServerConfig:
     deny_tools: tuple[str, ...] = ()
     max_inline_bytes: int = 16_384
 
+    def __post_init__(self) -> None:
+        if not self.name:
+            raise ValueError("ServerConfig.name is required")
+        if self.transport not in {"stdio", "streamable_http", "sse_legacy"}:
+            raise ValueError(f"{self.name}: unknown transport {self.transport!r}")
+        if self.connect_timeout_ms <= 0 or self.call_timeout_ms <= 0:
+            raise ValueError(f"{self.name}: timeouts must be positive")
+        if self.max_concurrency is not None and self.max_concurrency < 1:
+            raise ValueError(f"{self.name}: max_concurrency must be >= 1")
+        if self.max_inline_bytes < 0:
+            raise ValueError(f"{self.name}: max_inline_bytes must be non-negative")
+
 
 @dataclass(frozen=True)
 class RegistryConfig:

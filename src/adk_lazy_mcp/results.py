@@ -2,6 +2,17 @@ from __future__ import annotations
 
 from typing import Any
 
+_PREVIEW_CHARS = 200
+
+
+def _truncate_utf8(text: str, max_bytes: int) -> tuple[str, bool]:
+    """Return text truncated to at most ``max_bytes`` UTF-8 bytes, plus a truncated flag."""
+    encoded = text.encode("utf-8")
+    if len(encoded) <= max_bytes:
+        return text, False
+    # Decode with ``ignore`` to drop the partial multi-byte sequence at the boundary.
+    return encoded[:max_bytes].decode("utf-8", errors="ignore"), True
+
 
 def normalize_result(raw: dict[str, Any], *, max_inline_bytes: int = 16_384) -> dict[str, Any]:
     """Normalize MCP CallToolResult-like payload to stable typed envelope."""
@@ -13,10 +24,10 @@ def normalize_result(raw: dict[str, Any], *, max_inline_bytes: int = 16_384) -> 
         item_type = item.get("type", "text")
         if item_type == "text":
             text = item.get("text", "")
-            if len(text.encode("utf-8")) > max_inline_bytes:
-                text = text[: max_inline_bytes // 2]
+            trimmed, was_truncated = _truncate_utf8(text, max_inline_bytes)
+            if was_truncated:
                 truncated = True
-            content.append({"type": "text", "text": text, "preview": text[:200]})
+            content.append({"type": "text", "text": trimmed})
         elif item_type in {"image", "audio"}:
             artifacts.append(
                 {
@@ -31,7 +42,7 @@ def normalize_result(raw: dict[str, Any], *, max_inline_bytes: int = 16_384) -> 
                     "type": item_type,
                     "uri": item.get("uri"),
                     "mime_type": item.get("mimeType"),
-                    "preview": str(item)[:200],
+                    "preview": str(item)[:_PREVIEW_CHARS],
                 }
             )
 
