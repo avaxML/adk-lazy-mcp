@@ -418,9 +418,9 @@ def _name_match_boost(query: str, tool: ToolSchema) -> float:
     return 0.0
 
 
-def _build_semantic_vector(tokens: tuple[str, ...] | list[str]) -> dict[str, float]:
+def _build_semantic_vector(token_sequence: tuple[str, ...] | list[str]) -> dict[str, float]:
     features: Counter[str] = Counter()
-    for token in tokens:
+    for token in token_sequence:
         if not token:
             continue
         features[f"tok:{token}"] += 1.0
@@ -435,12 +435,12 @@ def _build_semantic_vector(tokens: tuple[str, ...] | list[str]) -> dict[str, flo
     return {feature: weight / norm for feature, weight in features.items()}
 
 
-def _cosine_similarity(left: dict[str, float], right: dict[str, float]) -> float:
-    if not left or not right:
+def _cosine_similarity(vector_a: dict[str, float], vector_b: dict[str, float]) -> float:
+    if not vector_a or not vector_b:
         return 0.0
-    if len(left) > len(right):
-        left, right = right, left
-    return sum(weight * right.get(feature, 0.0) for feature, weight in left.items())
+    if len(vector_a) > len(vector_b):
+        vector_a, vector_b = vector_b, vector_a
+    return sum(weight * vector_b.get(feature, 0.0) for feature, weight in vector_a.items())
 
 
 def _build_tool_families(tools: dict[str, ToolSchema]) -> dict[str, str]:
@@ -469,13 +469,13 @@ def _cluster_signature(tool: ToolSchema) -> set[str]:
     }
 
 
-def _jaccard(left: set[str], right: set[str]) -> float:
-    if not left or not right:
+def _jaccard(signature_a: set[str], signature_b: set[str]) -> float:
+    if not signature_a or not signature_b:
         return 0.0
-    intersection = len(left & right)
+    intersection = len(signature_a & signature_b)
     if intersection == 0:
         return 0.0
-    return intersection / len(left | right)
+    return intersection / len(signature_a | signature_b)
 
 
 def _reciprocal_rank_fusion_score(rank: int) -> float:
