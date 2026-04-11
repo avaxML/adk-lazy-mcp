@@ -171,8 +171,7 @@ class CatalogManager:
             return self._semantic_fallback_matches(server, entry, query)
 
         candidate_names = [
-            tool_name
-            for tool_name, _ in lexical_matches[: self._retrieval.semantic_rerank_limit]
+            tool_name for tool_name, _ in lexical_matches[: self._retrieval.semantic_rerank_limit]
         ]
         semantic_scores = self._semantic_scores(server, candidate_names, query)
         semantic_ranks = {
@@ -194,9 +193,7 @@ class CatalogManager:
         for lexical_rank, (tool_name, _) in enumerate(lexical_matches, start=1):
             score = _reciprocal_rank_fusion_score(lexical_rank, self._retrieval)
             if tool_name in semantic_ranks:
-                score += _reciprocal_rank_fusion_score(
-                    semantic_ranks[tool_name], self._retrieval
-                )
+                score += _reciprocal_rank_fusion_score(semantic_ranks[tool_name], self._retrieval)
             ranked.append(
                 _SearchMatch(
                     server=server,
@@ -243,9 +240,7 @@ class CatalogManager:
         tool_names: Iterable[str],
         query: str,
     ) -> dict[str, float]:
-        query_vector = _build_semantic_vector(
-            _extract_alphanumeric_tokens(query), self._retrieval
-        )
+        query_vector = _build_semantic_vector(_extract_alphanumeric_tokens(query), self._retrieval)
         if not query_vector:
             return {}
         return {
