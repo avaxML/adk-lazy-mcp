@@ -210,9 +210,9 @@ class CatalogManager:
         families = self._tool_families.get(server, {})
         ranked: list[_SearchMatch] = []
         for lexical_rank, (tool_name, _) in enumerate(lexical_matches, start=1):
-            score = _rrf(lexical_rank)
+            score = _reciprocal_rank_fusion_score(lexical_rank)
             if tool_name in semantic_ranks:
-                score += _rrf(semantic_ranks[tool_name])
+                score += _reciprocal_rank_fusion_score(semantic_ranks[tool_name])
             ranked.append(
                 _SearchMatch(
                     server=server,
@@ -242,7 +242,7 @@ class CatalogManager:
                     tool=tool_name,
                     description=entry.tools[tool_name].description,
                     family=families.get(tool_name, tool_name),
-                    score=_rrf(rank),
+                    score=_reciprocal_rank_fusion_score(rank),
                 )
             )
         return matches
@@ -253,7 +253,7 @@ class CatalogManager:
         tool_names: Iterable[str],
         query: str,
     ) -> dict[str, float]:
-        query_vector = _build_semantic_vector(_tokenize_text(query))
+        query_vector = _build_semantic_vector(_extract_alphanumeric_tokens(query))
         if not query_vector:
             return {}
         return {
@@ -319,7 +319,7 @@ class _ServerLexicalIndex:
         if not query:
             return [(name, 1.0) for name in sorted(tools)]
 
-        query_terms = _tokenize_text(query)
+        query_terms = _extract_alphanumeric_tokens(query)
         if not query_terms:
             return []
 
@@ -355,7 +355,7 @@ def _canonical_json(value: Any) -> str:
 
 def _build_document_terms(name: str, description: str, schema: dict[str, Any]) -> list[str]:
     name_terms = _tokenize_identifier(name)
-    description_terms = _tokenize_text(description)
+    description_terms = _extract_alphanumeric_tokens(description)
     schema_terms = _schema_terms(schema)
     return [*(name_terms * _NAME_TERM_WEIGHT), *description_terms, *schema_terms]
 
@@ -386,7 +386,7 @@ def _schema_terms(schema: Any) -> list[str]:
     for key in ("title", "description"):
         value = schema.get(key)
         if isinstance(value, str):
-            tokens.extend(_tokenize_text(value))
+            tokens.extend(_extract_alphanumeric_tokens(value))
 
     for key in ("allOf", "anyOf", "oneOf"):
         value = schema.get(key)
@@ -398,10 +398,10 @@ def _schema_terms(schema: Any) -> list[str]:
 
 def _tokenize_identifier(value: str) -> list[str]:
     expanded = _CAMEL_RE.sub(" ", value.replace("-", " ").replace("_", " "))
-    return _tokenize_text(expanded)
+    return _extract_alphanumeric_tokens(expanded)
 
 
-def _tokenize_text(value: str) -> list[str]:
+def _extract_alphanumeric_tokens(value: str) -> list[str]:
     return _TOKEN_RE.findall(value.lower())
 
 
@@ -478,5 +478,5 @@ def _jaccard(left: set[str], right: set[str]) -> float:
     return intersection / len(left | right)
 
 
-def _rrf(rank: int) -> float:
+def _reciprocal_rank_fusion_score(rank: int) -> float:
     return 1.0 / (_RRF_K + rank)
