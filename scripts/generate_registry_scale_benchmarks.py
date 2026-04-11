@@ -111,9 +111,7 @@ async def _benchmark_level(entries: list[dict[str, Any]]) -> dict[str, Any]:
     async def list_tools(server: str) -> list[dict[str, Any]]:
         return catalog[server]
 
-    async def execute_tool(
-        server: str, tool: str, arguments: dict[str, Any]
-    ) -> dict[str, Any]:
+    async def execute_tool(server: str, tool: str, arguments: dict[str, Any]) -> dict[str, Any]:
         return {
             "isError": False,
             "content": [{"type": "text", "text": f"{server}:{tool}"}],
@@ -268,27 +266,23 @@ def _svg_line_chart(
     legend_y = SVG_HEIGHT - PLOT_BOTTOM + 44
     for index, (label, values) in enumerate(series):
         color = SERIES_COLORS[index % len(SERIES_COLORS)]
-        points = " ".join(
-            f"{x_pos(i):.2f},{y_pos(value):.2f}" for i, value in enumerate(values)
-        )
-        lines.append(
-            f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{points}"/>'
-        )
+        points = " ".join(f"{x_pos(i):.2f},{y_pos(value):.2f}" for i, value in enumerate(values))
+        lines.append(f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{points}"/>')
         for i, value in enumerate(values):
             lines.append(
                 f'<circle cx="{x_pos(i):.2f}" cy="{y_pos(value):.2f}" r="4" fill="{color}"/>'
             )
         legend_item_x = legend_x + (index * 250)
-        lines.append(f'<g class="legend">')
+        lines.append('<g class="legend">')
         lines.append(
             f'<line x1="{legend_item_x}" y1="{legend_y}" x2="{legend_item_x + 26}" y2="{legend_y}" stroke="{color}" stroke-width="3"/>'
         )
         lines.append(
             f'<text x="{legend_item_x + 34}" y="{legend_y + 4}" class="muted">{label}</text>'
         )
-        lines.append('</g>')
+        lines.append("</g>")
 
-    lines.append('</svg>')
+    lines.append("</svg>")
     return "\n".join(lines)
 
 
