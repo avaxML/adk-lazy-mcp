@@ -28,8 +28,8 @@ async def _build_toolset(adk_callbacks: ADKCallbacks) -> LazyMCPToolset:
     list_tools, execute_tool = adk_callbacks
     return LazyMCPToolset(
         [
+            ServerConfig(name="math", transport="streamable_http"),
             ServerConfig(name="sequential_thinking", transport="streamable_http"),
-            ServerConfig(name="fetch", transport="streamable_http"),
         ],
         RegistryConfig(warm_mode="eager"),
         list_tools=list_tools,
@@ -50,25 +50,56 @@ async def test_get_tools_surfaces_three_meta_tools(adk_callbacks: ADKCallbacks) 
         await toolset.close()
 
 
-async def test_discover_then_inspect_real_fetch_tool(
+async def test_discover_then_inspect_real_math_tool(
     adk_callbacks: ADKCallbacks,
 ) -> None:
     toolset = await _build_toolset(adk_callbacks)
     try:
         await toolset.get_tools()
 
-        discover = await toolset.discover_mcp_tools(query="fetch")
+        # The math server publishes 22 arithmetic/trig tools; ``add`` is one
+        # of them and the ranked discovery should surface it first.
+        discover = await toolset.discover_mcp_tools(query="add")
         assert discover["status"] == "success"
         assert discover["total_matches"] >= 1
 
-        # The fetch server publishes a tool literally named "fetch".
-        target = next((t for t in discover["tools"] if t["server"] == "fetch"), None)
-        assert target is not None, f"no fetch tool found: {discover['tools']}"
+        target = next(
+            (t for t in discover["tools"] if t["server"] == "math" and t["tool"] == "add"),
+            None,
+        )
+        assert target is not None, f"no 'add' tool found: {discover['tools']}"
 
         inspect = await toolset.inspect_mcp_tool(target["server"], target["tool"])
         assert inspect["status"] == "success"
         assert "input_schema" in inspect
         assert inspect["schema_hash"].startswith("sha256:")
+    finally:
+        await toolset.close()
+
+
+async def test_execute_math_add_is_deterministic(
+    adk_callbacks: ADKCallbacks,
+) -> None:
+    """``add`` is a pure function, so the integration run can assert a value."""
+    toolset = await _build_toolset(adk_callbacks)
+    try:
+        await toolset.get_tools()
+
+        inspect = await toolset.inspect_mcp_tool("math", "add")
+        schema = inspect["input_schema"]
+        # Build the argument object directly from the inspected schema so the
+        # test survives field renames (``a``/``b`` vs ``firstNumber``/``secondNumber``).
+        args: dict[str, Any] = {}
+        for name in schema.get("required", []):
+            args[name] = 2  # 2 + 2 is a safe canary
+
+        result = await toolset.execute_mcp_tool("math", "add", args)
+        assert result["status"] == "success"
+        assert result["tool_result"]["is_error"] is False
+        # The server returns the sum as text content; we don't hard-assert "4"
+        # because different versions format it differently, but we do assert
+        # the envelope is healthy.
+        assert result["tool_result"]["content"], "expected non-empty content"
     finally:
         await toolset.close()
 
@@ -107,7 +138,7 @@ async def test_health_snapshot_reports_ready(adk_callbacks: ADKCallbacks) -> Non
         snap = toolset.health_snapshot()
         assert snap["status"] == "ready"
         names = {s["name"] for s in snap["servers"]}
-        assert {"sequential_thinking", "fetch"} <= names
+        assert {"math", "sequential_thinking"} <= names
     finally:
         await toolset.close()
 

@@ -80,9 +80,13 @@ async def test_lazy_surface_is_smaller_than_naive(
     adk_callbacks: ADKCallbacks, capsys: pytest.CaptureFixture[str]
 ) -> None:
     list_tools, execute_tool = adk_callbacks
+    # ``math`` is ``@EthanHenrickson/math-mcp`` (22 pure-function tools).
+    # ``sequential_thinking`` is ``@smithery-ai/server-sequential-thinking``
+    # (1 tool). Together they give a realistic ~23-tool surface for the
+    # "dump every tool into the prompt" baseline.
     server_configs = [
+        ServerConfig(name="math", transport="streamable_http"),
         ServerConfig(name="sequential_thinking", transport="streamable_http"),
-        ServerConfig(name="fetch", transport="streamable_http"),
     ]
     toolset = LazyMCPToolset(
         server_configs,
@@ -106,7 +110,7 @@ async def test_lazy_surface_is_smaller_than_naive(
         naive_tokens = _approx_tokens(naive_json)
 
         # Plus the discover payload the model actually sees when it searches.
-        discover = await toolset.discover_mcp_tools(query="fetch")
+        discover = await toolset.discover_mcp_tools(query="add")
         discover_json = json.dumps(discover)
         discover_bytes = len(discover_json.encode("utf-8"))
         discover_tokens = _approx_tokens(discover_json)
@@ -114,13 +118,15 @@ async def test_lazy_surface_is_smaller_than_naive(
         ratio = naive_bytes / max(lazy_bytes, 1)
 
         # --- latency comparison ---------------------------------------------
-        # Lazy path: discover(query) -> inspect -> execute on a specific tool.
-        target = next((t for t in discover["tools"] if t["server"] == "fetch"), None)
-        assert target is not None, "expected the fetch server to expose a tool"
+        # Lazy path: discover(query) -> inspect -> execute on ``math/add``.
+        target = next(
+            (t for t in discover["tools"] if t["server"] == "math" and t["tool"] == "add"),
+            None,
+        )
+        assert target is not None, "expected math/add to be discoverable"
 
         lazy_start = time.perf_counter()
         await toolset.discover_mcp_tools(query=target["tool"])
-        await toolset.inspect_mcp_tool(target["server"], target["tool"])
         inspect_result = await toolset.inspect_mcp_tool(target["server"], target["tool"])
         await toolset.execute_mcp_tool(
             target["server"],

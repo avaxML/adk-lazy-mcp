@@ -38,12 +38,21 @@ from mcp.client.streamable_http import streamablehttp_client  # noqa: E402
 
 SMITHERY_BASE = "https://server.smithery.ai"
 
-# Small, free, widely-available servers chosen so the test suite is cheap
-# and deterministic. Both are well-maintained by Smithery and require no
-# per-user auth beyond the registry API key.
+# Two free, no-config, remotely-deployed Smithery servers chosen to make
+# the efficiency benchmark meaningful and CI-safe:
+#
+# * ``@EthanHenrickson/math-mcp`` — 22 pure-function arithmetic / stats /
+#   trig tools. No I/O, no state, no API keys. Gives a large schema-size
+#   delta against the three lazy meta-tools.
+# * ``@smithery-ai/server-sequential-thinking`` — single-tool first-party
+#   server (``sequentialthinking``). Stable baseline, zero-config, side-
+#   effect-free.
+#
+# Neither server requires a ``config=<base64>`` query parameter — only the
+# ``SMITHERY_API_KEY`` registry key is needed.
 DEFAULT_SERVERS: tuple[tuple[str, str], ...] = (
+    ("math", "@EthanHenrickson/math-mcp"),
     ("sequential_thinking", "@smithery-ai/server-sequential-thinking"),
-    ("fetch", "@smithery-ai/fetch"),
 )
 
 
