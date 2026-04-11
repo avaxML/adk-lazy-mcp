@@ -141,4 +141,5 @@ class CatalogManager:
 
 
 def _canonical_json(value: Any) -> str:
+    """Return a stable JSON string so semantically equal schemas hash the same."""
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)

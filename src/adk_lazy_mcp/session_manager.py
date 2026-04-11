@@ -46,6 +46,10 @@ class SessionManager:
     def breaker_failures(self) -> int:
         return self._breaker.failures
 
+    @property
+    def breaker_opened_at(self) -> float | None:
+        return self._breaker.opened_at
+
     async def execute(
         self,
         call_coro: Callable[[], Awaitable[Any]],

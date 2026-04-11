@@ -79,6 +79,7 @@ class TestExecute:
 
         with pytest.raises(RuntimeError, match="circuit_open"):
             await sm.execute(_ok, timeout_ms=500, allow_retry=False)
+        assert sm.breaker_opened_at == 100.0
 
         now += 30.0
         result = await sm.execute(_ok, timeout_ms=500, allow_retry=False)
