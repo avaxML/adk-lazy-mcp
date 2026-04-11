@@ -22,7 +22,9 @@ class TestServerConfig:
             ServerConfig(name="")
 
     def test_unknown_transport_is_rejected(self) -> None:
-        with pytest.raises((ValidationError, ValueError), match=r"transport|unknown transport"):
+        with pytest.raises(
+            (ValidationError, ValueError), match=r"unknown transport|Input should be"
+        ):
             ServerConfig(name="srv", transport="grpc")  # type: ignore[arg-type]
 
     @pytest.mark.parametrize(
