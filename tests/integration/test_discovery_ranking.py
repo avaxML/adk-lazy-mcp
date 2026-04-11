@@ -1,4 +1,4 @@
-"""Integration tests for BM25 discovery ranking against live Smithery MCPs.
+"""Integration tests for BM25 discovery ranking against live Smithery MCP servers.
 
 These tests exercise the per-server BM25 index, cross-server reciprocal-rank
 fusion, semantic reranking, leader-cluster tool families, and schema-aware
@@ -283,7 +283,7 @@ async def test_semantic_fallback_close_variant(
 ) -> None:
     """A semantically close query should still find relevant tools.
 
-    ``"sequantialthinking"`` is a typo that should still surface the
+    ``"sequantialthinking"`` is an intentional typo that should still surface the
     ``sequentialthinking`` tool via trigram-based semantic overlap.
     """
     toolset = await _build_extended_toolset(extended_adk_callbacks)
