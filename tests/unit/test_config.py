@@ -115,10 +115,6 @@ class TestRegistryConfig:
             ({"summary_ttl_s": 0}, "summary_ttl_s must be positive"),
             ({"max_discover_results": 0}, "max_discover_results must be >= 1"),
             ({"hard_discover_cap": 0}, "hard_discover_cap must be >= 1"),
-            (
-                {"max_discover_results": 10, "hard_discover_cap": 5},
-                "max_discover_results must be <= hard_discover_cap",
-            ),
         ],
     )
     def test_invalid_limits_are_rejected(self, kwargs: dict[str, int], match: str) -> None:

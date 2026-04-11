@@ -164,8 +164,6 @@ class RegistryConfig(BaseSettings):
             raise ValueError("max_discover_results must be >= 1")
         if self.hard_discover_cap < 1:
             raise ValueError("hard_discover_cap must be >= 1")
-        if self.max_discover_results > self.hard_discover_cap:
-            raise ValueError("max_discover_results must be <= hard_discover_cap")
         return self
 
 
