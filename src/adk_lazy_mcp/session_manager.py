@@ -42,6 +42,10 @@ class SessionManager:
     def breaker_open(self) -> bool:
         return self._breaker.open
 
+    @property
+    def breaker_failures(self) -> int:
+        return self._breaker.failures
+
     async def execute(
         self,
         call_coro: Callable[[], Awaitable[Any]],
@@ -51,9 +55,9 @@ class SessionManager:
     ) -> Any:
         if self._closed:
             raise RuntimeError("session_closed")
-        if self._breaker.open and not self._breaker_ready():
-            raise RuntimeError("circuit_open")
         if self._breaker.open:
+            if not self._breaker_ready():
+                raise RuntimeError("circuit_open")
             self._reset_breaker()
 
         timeout_s = timeout_ms / 1000
