@@ -204,7 +204,14 @@ class CatalogManager:
         semantic_ranks = {
             tool_name: rank
             for rank, (tool_name, _) in enumerate(
-                sorted(semantic_scores.items(), key=lambda item: (-item[1], item[0])),
+                sorted(
+                    (
+                        (tool_name, score)
+                        for tool_name, score in semantic_scores.items()
+                        if score > 0.0
+                    ),
+                    key=lambda item: (-item[1], item[0]),
+                ),
                 start=1,
             )
         }

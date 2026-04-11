@@ -6,7 +6,12 @@ from typing import Any
 
 import pytest
 
-from adk_lazy_mcp.catalog import CatalogManager, ServerState, ToolSchema
+from adk_lazy_mcp.catalog import (
+    CatalogManager,
+    ServerState,
+    ToolSchema,
+    _reciprocal_rank_fusion_score,
+)
 from adk_lazy_mcp.config import RegistryConfig, ServerConfig
 
 
@@ -194,3 +199,33 @@ class TestCatalogManager:
         results = manager.discover("writer")
 
         assert [r["tool"] for r in results] == ["write_file"]
+
+    async def test_rank_server_matches_ignores_zero_semantic_scores(
+        self, manager: CatalogManager, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        await manager.hydrate_server("filesystem", [_tool("alpha"), _tool("beta")])
+        entry = manager.get_entry("filesystem")
+
+        class _StubLexicalIndex:
+            @staticmethod
+            def search(query: str, tools: dict[str, ToolSchema]) -> list[tuple[str, float]]:
+                return [("alpha", 10.0), ("beta", 9.0)]
+
+        monkeypatch.setitem(
+            manager._lexical_indexes,
+            "filesystem",
+            _StubLexicalIndex(),
+        )
+        monkeypatch.setattr(
+            manager,
+            "_semantic_scores",
+            lambda server, tool_names, query: {"alpha": 0.0, "beta": 0.0},
+        )
+
+        matches = manager._rank_server_matches("filesystem", entry, "query")
+
+        assert [match.tool for match in matches] == ["alpha", "beta"]
+        assert [match.score for match in matches] == [
+            _reciprocal_rank_fusion_score(1),
+            _reciprocal_rank_fusion_score(2),
+        ]
