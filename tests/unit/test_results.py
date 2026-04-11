@@ -119,3 +119,7 @@ class TestMisc:
     def test_non_mapping_content_item_gets_preview(self) -> None:
         result = normalize_result({"content": ["unexpected"]})
         assert result["content"] == [{"type": "unknown", "preview": "unexpected"}]
+
+    def test_non_mapping_content_item_preview_is_truncated(self) -> None:
+        result = normalize_result({"content": ["x" * 250]})
+        assert result["content"] == [{"type": "unknown", "preview": "x" * 200}]
