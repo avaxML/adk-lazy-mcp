@@ -65,7 +65,7 @@ class LazyMCPToolset:
         """Search the MCP catalog for tools matching a query.
 
         Use this as the first step of the three-step MCP workflow. The
-        response contains a ranked list of ``{server, tool, description}``
+        response contains a ranked list of ``{server, tool, description, family}``
         entries plus pagination hints. Pass ``server`` to restrict the
         search to a single MCP server, and ``limit`` to cap the number of
         results (the registry enforces a hard upper bound).
@@ -79,7 +79,9 @@ class LazyMCPToolset:
         Returns:
             A dict with keys ``status``, ``tools``, ``total_matches``,
             ``returned``, ``has_more``, ``servers_considered``,
-            ``unavailable_servers``, and ``hint``.
+            ``unavailable_servers``, and ``hint``. Each tool result includes
+            a derived ``family`` label built from the per-server discovery
+            cluster.
         """
         try:
             return await self._registry.discover(query=query, server=server, limit=limit)

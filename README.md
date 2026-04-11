@@ -5,7 +5,7 @@
 ## Highlights
 - Constant model-facing tool surface: `discover_mcp_tools`, `inspect_mcp_tool`, `execute_mcp_tool`.
 - Configurable warm modes (`background`, `eager`, `on_demand`).
-- Bounded discovery with ranking, limits, pagination hints, and unavailable-server reporting.
+- Bounded discovery with per-server BM25 ranking, lightweight vector reranking, derived tool families, pagination hints, and unavailable-server reporting.
 - Client-side schema validation before remote execution.
 - Transport-aware per-server concurrency defaults and retry boundaries.
 - Typed result normalization with truncation and artifact references.

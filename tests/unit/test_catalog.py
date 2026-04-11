@@ -149,3 +149,46 @@ class TestCatalogManager:
         manager.mark_error("search", "boom")
         results = manager.discover("")
         assert {r["server"] for r in results} == {"filesystem"}
+
+    async def test_discover_indexes_schema_properties(self, manager: CatalogManager) -> None:
+        await manager.hydrate_server(
+            "filesystem",
+            [
+                _tool(
+                    "write_file",
+                    "Writes file contents",
+                    {
+                        "type": "object",
+                        "properties": {"path": {"type": "string"}, "text": {"type": "string"}},
+                        "required": ["path", "text"],
+                    },
+                )
+            ],
+        )
+
+        results = manager.discover("text")
+
+        assert [r["tool"] for r in results] == ["write_file"]
+
+    async def test_discover_returns_tool_family_metadata(self, manager: CatalogManager) -> None:
+        await manager.hydrate_server(
+            "filesystem",
+            [
+                _tool("read_file", "Read file contents"),
+                _tool("read_text", "Read text contents"),
+                _tool("write_file", "Write file contents"),
+            ],
+        )
+
+        results = manager.discover("read")
+
+        families = {item["tool"]: item["family"] for item in results}
+        assert families["read_file"] == families["read_text"]
+        assert families["write_file"] != families["read_file"]
+
+    async def test_discover_semantic_fallback_handles_close_variants(self, manager: CatalogManager) -> None:
+        await manager.hydrate_server("filesystem", [_tool("write_file", "Write file contents")])
+
+        results = manager.discover("writer")
+
+        assert [r["tool"] for r in results] == ["write_file"]
