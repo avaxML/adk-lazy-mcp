@@ -55,6 +55,28 @@ DEFAULT_SERVERS: tuple[tuple[str, str], ...] = (
     ("sequential_thinking", "@smithery-ai/server-sequential-thinking"),
 )
 
+# Extended set of free, no-config Smithery MCPs used for discovery-ranking
+# integration tests.  These exercise BM25 indexing, cross-server rank
+# fusion, semantic reranking, and leader-cluster families against a
+# realistically diverse catalogue.
+#
+# Servers are chosen for:
+#   1. Zero config — no ``config=<base64>`` parameter needed.
+#   2. Diversity — different domains so cross-server ranking is meaningful.
+#   3. Stability — community & first-party servers with low churn.
+#
+# If a server is temporarily unreachable the test fixtures handle it
+# gracefully; see ``extended_smithery_client``.
+EXTENDED_SERVERS: tuple[tuple[str, str], ...] = (
+    *DEFAULT_SERVERS,
+    ("calculator", "@githejie/mcp-server-calculator"),
+    ("clear_thought", "@ThinkFar/clear-thought-mcp"),
+    ("duckduckgo", "@nickclyde/duckduckgo-mcp-server"),
+    ("weather", "@smithery-ai/national-weather-service"),
+    ("pubmed", "@JackKuo666/pubmed-mcp-server"),
+    ("paper_search", "@openags/paper-search-mcp"),
+)
+
 
 def _server_url(reference: str, config: dict[str, Any] | None = None) -> str:
     api_key = os.environ["SMITHERY_API_KEY"]
@@ -152,3 +174,29 @@ def adk_callbacks(
 ]:
     """Return the ``(list_tools, execute_tool)`` pair wired to Smithery."""
     return smithery_client.list_tools, smithery_client.execute_tool
+
+
+# ---------------------------------------------------------------------------
+# Extended multi-server fixtures for discovery-ranking tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def extended_smithery_client() -> SmitheryClient:
+    """Return a session-opening adapter for the *extended* set of Smithery MCPs.
+
+    Same rationale as ``smithery_client`` — all network I/O happens inside
+    each test's own task.
+    """
+    return SmitheryClient(references=dict(EXTENDED_SERVERS))
+
+
+@pytest.fixture
+def extended_adk_callbacks(
+    extended_smithery_client: SmitheryClient,
+) -> tuple[
+    Callable[[str], Awaitable[list[dict[str, Any]]]],
+    Callable[[str, str, dict[str, Any]], Awaitable[dict[str, Any]]],
+]:
+    """Return ``(list_tools, execute_tool)`` wired to the extended server set."""
+    return extended_smithery_client.list_tools, extended_smithery_client.execute_tool
