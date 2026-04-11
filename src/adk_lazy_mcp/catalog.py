@@ -24,6 +24,7 @@ _RRF_K = 60
 _SEMANTIC_RERANK_LIMIT = 12
 _SEMANTIC_FALLBACK_THRESHOLD = 0.15
 _LEADER_CLUSTER_THRESHOLD = 0.35
+_MIN_CLUSTER_TOKEN_LENGTH = 3
 _NAME_TERM_WEIGHT = 3
 _SCHEMA_PROPERTY_WEIGHT = 2
 _REQUIRED_FIELD_WEIGHT = 2
@@ -418,7 +419,7 @@ def _name_match_boost(query: str, tool: ToolSchema) -> float:
     return 0.0
 
 
-def _build_semantic_vector(token_sequence: tuple[str, ...] | list[str]) -> dict[str, float]:
+def _build_semantic_vector(token_sequence: Iterable[str]) -> dict[str, float]:
     features: Counter[str] = Counter()
     for token in token_sequence:
         if not token:
@@ -465,7 +466,9 @@ def _build_tool_families(tools: dict[str, ToolSchema]) -> dict[str, str]:
 
 def _cluster_signature(tool: ToolSchema) -> set[str]:
     return {
-        token for token in tool.search_terms if len(token) > 2 and token not in _CLUSTER_STOPWORDS
+        token
+        for token in tool.search_terms
+        if len(token) >= _MIN_CLUSTER_TOKEN_LENGTH and token not in _CLUSTER_STOPWORDS
     }
 
 
