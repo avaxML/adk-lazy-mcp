@@ -30,7 +30,7 @@ class ServerConfig(BaseModel):
     max_inline_bytes: int = 16_384
 
     @model_validator(mode="after")
-    def _validate(self) -> "ServerConfig":
+    def _validate(self) -> ServerConfig:
         if not self.name:
             raise ValueError("ServerConfig.name is required")
         if self.connect_timeout_ms <= 0 or self.call_timeout_ms <= 0:

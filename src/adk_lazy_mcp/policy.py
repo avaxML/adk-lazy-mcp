@@ -23,14 +23,14 @@ class PolicyEngine:
         if cfg.transport in {"streamable_http", "sse_legacy"} and cfg.url:
             parsed = urlparse(cfg.url)
             if self._strict_https and parsed.scheme != "https":
-                return PolicyDecision(False, "require_https")
+                return PolicyDecision(allowed=False, reason="require_https")
             if self._allowed_hosts and parsed.hostname not in self._allowed_hosts:
-                return PolicyDecision(False, "host_not_allowed")
-        return PolicyDecision(True)
+                return PolicyDecision(allowed=False, reason="host_not_allowed")
+        return PolicyDecision(allowed=True)
 
     def validate_tool(self, cfg: ServerConfig, tool_name: str) -> PolicyDecision:
         if cfg.allow_tools is not None and tool_name not in cfg.allow_tools:
-            return PolicyDecision(False, "tool_not_allowlisted")
+            return PolicyDecision(allowed=False, reason="tool_not_allowlisted")
         if tool_name in cfg.deny_tools:
-            return PolicyDecision(False, "tool_denylisted")
-        return PolicyDecision(True)
+            return PolicyDecision(allowed=False, reason="tool_denylisted")
+        return PolicyDecision(allowed=True)

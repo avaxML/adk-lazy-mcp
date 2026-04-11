@@ -22,7 +22,7 @@ class TestServerConfig:
             ServerConfig(name="")
 
     def test_unknown_transport_is_rejected(self) -> None:
-        with pytest.raises((ValidationError, ValueError), match="transport|unknown transport"):
+        with pytest.raises((ValidationError, ValueError), match=r"transport|unknown transport"):
             ServerConfig(name="srv", transport="grpc")  # type: ignore[arg-type]
 
     @pytest.mark.parametrize(
@@ -47,7 +47,9 @@ class TestServerConfig:
         assert cfg.max_concurrency == 1
 
     def test_negative_inline_bytes_is_rejected(self) -> None:
-        with pytest.raises((ValidationError, ValueError), match="max_inline_bytes must be non-negative"):
+        with pytest.raises(
+            (ValidationError, ValueError), match="max_inline_bytes must be non-negative"
+        ):
             ServerConfig(name="srv", max_inline_bytes=-1)
 
     def test_inline_bytes_of_zero_is_allowed(self) -> None:
