@@ -54,5 +54,6 @@ missing, so regular unit runs stay offline.
 GitHub Actions runs `ruff` and the unit-test matrix on every push/PR against
 every Python version supported by both this package and Google ADK
 (3.11 – 3.14). A separate integration job runs against the live Smithery
-servers on pushes to `main`, and requires a `SMITHERY_API_KEY` repository
-secret.
+servers on every push and pull request when the `SMITHERY_API_KEY`
+repository secret is available; it is `continue-on-error: true` so network
+flakes and fork PRs (which cannot see the secret) never block merges.

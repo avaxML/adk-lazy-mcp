@@ -61,7 +61,8 @@ jobs:
   integration:
     name: Integration (Smithery MCPs)
     runs-on: ubuntu-latest
-    # Only run on pushes to main and only if the SMITHERY_API_KEY secret exists.
+    # Only run on pushes to main; the secret check below skips cleanly if the
+    # repository secret is not configured for that branch.
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [lint, test]
     steps:
@@ -81,7 +82,7 @@ jobs:
             echo "present=true" >> "$GITHUB_OUTPUT"
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::SMITHERY_API_KEY secret is not configured - integration tests skipped"
+            echo "::notice::SMITHERY_API_KEY secret is not configured - integration tests skipped (expected on fork PRs)"
           fi
       - name: Install integration dependencies
         if: steps.secret.outputs.present == 'true'
