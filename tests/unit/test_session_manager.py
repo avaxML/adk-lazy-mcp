@@ -128,6 +128,20 @@ class TestExecute:
             await sm.execute(_other, timeout_ms=500, allow_retry=True)
         assert calls["n"] == 1
 
+    async def test_retry_happens_for_broken_pipe_os_error(self) -> None:
+        sm = SessionManager(ServerConfig(name="fs"))
+        calls = {"n": 0}
+
+        async def _flaky() -> str:
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise BrokenPipeError
+            return "ok"
+
+        result = await sm.execute(_flaky, timeout_ms=500, allow_retry=True)
+        assert result == "ok"
+        assert calls["n"] == 2
+
     async def test_retry_that_also_fails_records_failure(self) -> None:
         sm = SessionManager(ServerConfig(name="fs"))
         calls = {"n": 0}
@@ -159,6 +173,16 @@ class TestExecute:
 
         await sm.execute(_ok, timeout_ms=500, allow_retry=False)
         assert sm.breaker_failures == 0
+
+    async def test_non_runtime_error_still_records_failure(self) -> None:
+        sm = SessionManager(ServerConfig(name="fs"))
+
+        async def _boom() -> None:
+            raise ValueError("explode")
+
+        with pytest.raises(ValueError, match="explode"):
+            await sm.execute(_boom, timeout_ms=500, allow_retry=False)
+        assert sm.breaker_failures == 1
 
     async def test_concurrency_limit_is_enforced(self) -> None:
         sm = SessionManager(ServerConfig(name="fs", max_concurrency=2))

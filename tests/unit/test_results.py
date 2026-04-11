@@ -45,6 +45,11 @@ class TestTextContent:
         assert result["content"] == []
         assert result["truncated"] is False
 
+    def test_none_content_is_treated_as_empty(self) -> None:
+        result = normalize_result({"content": None})
+        assert result["content"] == []
+        assert result["artifact_refs"] == []
+
 
 class TestBinaryContent:
     def test_image_becomes_artifact_ref(self) -> None:
@@ -110,3 +115,7 @@ class TestMisc:
         result = normalize_result(raw)
         assert len(result["content"]) == 2
         assert len(result["artifact_refs"]) == 1
+
+    def test_non_mapping_content_item_gets_preview(self) -> None:
+        result = normalize_result({"content": ["unexpected"]})
+        assert result["content"] == [{"type": "unknown", "preview": "unexpected"}]

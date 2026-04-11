@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import errno
 import time
 from collections.abc import Awaitable, Callable
 from typing import Any
@@ -71,7 +72,7 @@ class SessionManager:
             except TimeoutError:
                 self._record_failure()
                 raise
-            except RuntimeError as exc:
+            except Exception as exc:
                 if allow_retry and self._is_retryable(exc):
                     try:
                         result = await asyncio.wait_for(call_coro(), timeout=timeout_s)
@@ -106,5 +107,13 @@ class SessionManager:
         return (time.monotonic() - opened_at) >= _BREAKER_RESET_TIMEOUT_S
 
     @staticmethod
-    def _is_retryable(exc: RuntimeError) -> bool:
-        return str(exc) in {"broken_pipe", "connection_reset", "session_closed"}
+    def _is_retryable(exc: Exception) -> bool:
+        if isinstance(exc, (BrokenPipeError, ConnectionResetError, ConnectionAbortedError)):
+            return True
+        if isinstance(exc, OSError):
+            return exc.errno in {errno.EPIPE, errno.ECONNRESET, errno.ECONNABORTED}
+        return isinstance(exc, RuntimeError) and str(exc) in {
+            "broken_pipe",
+            "connection_reset",
+            "session_closed",
+        }
