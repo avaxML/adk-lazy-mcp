@@ -65,58 +65,6 @@ def _server_url(reference: str, config: dict[str, Any] | None = None) -> str:
     return f"{SMITHERY_BASE}/{reference}/mcp?{'&'.join(params)}"
 
 
-@dataclass
-class SmitheryClient:
-    """Adapter exposing the callback shape ``LazyMCPToolset`` expects.
-
-    The real MCP SDK speaks in terms of ``ClientSession`` objects. We keep one
-    open per logical "server name" and wrap the SDK calls so they look like
-    ``async (server) -> list[tool]`` / ``async (server, tool, args) -> result``
-    to the lazy toolset.
-    """
-
-    sessions: dict[str, ClientSession]
-    references: dict[str, str]
-
-    async def list_tools(self, server: str) -> list[dict[str, Any]]:
-        response = await self.sessions[server].list_tools()
-        out: list[dict[str, Any]] = []
-        for tool in response.tools:
-            out.append(
-                {
-                    "name": tool.name,
-                    "description": tool.description or "",
-                    "inputSchema": tool.inputSchema or {"type": "object"},
-                }
-            )
-        return out
-
-    async def execute_tool(
-        self, server: str, tool: str, arguments: dict[str, Any]
-    ) -> dict[str, Any]:
-        result = await self.sessions[server].call_tool(tool, arguments=arguments or {})
-        content: list[dict[str, Any]] = []
-        for item in result.content or []:
-            item_type = getattr(item, "type", "text")
-            if item_type == "text":
-                content.append({"type": "text", "text": getattr(item, "text", "")})
-            elif item_type == "image":
-                content.append(
-                    {
-                        "type": "image",
-                        "mimeType": getattr(item, "mimeType", None),
-                        "uri": getattr(item, "uri", None),
-                    }
-                )
-            else:
-                content.append({"type": item_type})
-        return {
-            "isError": bool(getattr(result, "isError", False)),
-            "content": content,
-            "structuredContent": getattr(result, "structuredContent", None),
-        }
-
-
 @contextlib.asynccontextmanager
 async def _open_session(reference: str) -> AsyncIterator[ClientSession]:
     url = _server_url(reference)
@@ -126,24 +74,78 @@ async def _open_session(reference: str) -> AsyncIterator[ClientSession]:
             yield session
 
 
-@pytest.fixture
-async def smithery_client() -> AsyncIterator[SmitheryClient]:
-    """Open live sessions to the default Smithery MCPs used by integration tests."""
-    stack = contextlib.AsyncExitStack()
-    sessions: dict[str, ClientSession] = {}
-    references: dict[str, str] = {}
-    try:
-        for name, reference in DEFAULT_SERVERS:
-            session = await stack.enter_async_context(_open_session(reference))
-            sessions[name] = session
-            references[name] = reference
-        yield SmitheryClient(sessions=sessions, references=references)
-    finally:
-        await stack.aclose()
+@dataclass
+class SmitheryClient:
+    """Adapter exposing the callback shape ``LazyMCPToolset`` expects.
+
+    Each call to ``list_tools`` / ``execute_tool`` opens a fresh MCP session
+    against the Smithery-hosted server. Opening per call is a little slower
+    than holding a session across the whole test, but it keeps every anyio
+    cancel scope entered and exited in the same task — which is the only
+    reliable way to use ``streamablehttp_client`` under ``pytest-asyncio``.
+    That plugin runs fixture setup and finalization in *different* tasks
+    (``runner.run(async_finalizer(), ...)``), so a long-lived session opened
+    in a fixture would raise ``RuntimeError("Attempted to exit cancel scope
+    in a different task than it was entered in")`` during teardown.
+    """
+
+    references: dict[str, str]
+
+    async def list_tools(self, server: str) -> list[dict[str, Any]]:
+        async with _open_session(self.references[server]) as session:
+            response = await session.list_tools()
+            out: list[dict[str, Any]] = []
+            for tool in response.tools:
+                out.append(
+                    {
+                        "name": tool.name,
+                        "description": tool.description or "",
+                        "inputSchema": tool.inputSchema or {"type": "object"},
+                    }
+                )
+            return out
+
+    async def execute_tool(
+        self, server: str, tool: str, arguments: dict[str, Any]
+    ) -> dict[str, Any]:
+        async with _open_session(self.references[server]) as session:
+            result = await session.call_tool(tool, arguments=arguments or {})
+            content: list[dict[str, Any]] = []
+            for item in result.content or []:
+                item_type = getattr(item, "type", "text")
+                if item_type == "text":
+                    content.append({"type": "text", "text": getattr(item, "text", "")})
+                elif item_type == "image":
+                    content.append(
+                        {
+                            "type": "image",
+                            "mimeType": getattr(item, "mimeType", None),
+                            "uri": getattr(item, "uri", None),
+                        }
+                    )
+                else:
+                    content.append({"type": item_type})
+            return {
+                "isError": bool(getattr(result, "isError", False)),
+                "content": content,
+                "structuredContent": getattr(result, "structuredContent", None),
+            }
 
 
 @pytest.fixture
-async def adk_callbacks(
+def smithery_client() -> SmitheryClient:
+    """Return a session-opening adapter for the default Smithery MCPs.
+
+    The fixture itself is synchronous: all network I/O happens inside the
+    tests' own task when they invoke the callbacks. That is deliberate — see
+    the ``SmitheryClient`` docstring for the pytest-asyncio task-boundary
+    rationale.
+    """
+    return SmitheryClient(references=dict(DEFAULT_SERVERS))
+
+
+@pytest.fixture
+def adk_callbacks(
     smithery_client: SmitheryClient,
 ) -> tuple[
     Callable[[str], Awaitable[list[dict[str, Any]]]],
