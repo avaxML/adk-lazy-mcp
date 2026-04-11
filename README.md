@@ -276,6 +276,78 @@ Integration tests skip cleanly if `SMITHERY_API_KEY` or optional integration dep
 
 ---
 
+## Registry-scale benchmark (100 MCPs)
+
+The repository also includes a reproducible **100-MCP registry-scale benchmark**
+for the exact growth points requested here: **10, 20, 40, 50, and 100 MCPs**.
+
+- Corpus: `docs/benchmarks/registry_corpus.json`
+- Generator: `scripts/generate_registry_scale_benchmarks.py`
+- Outputs: `docs/benchmarks/registry_scale_results.json` + the SVG plots below
+
+The corpus is the supplied mixed **Smithery + official/verified** manifest:
+
+- `100` total MCP entries
+- `22` verified entries
+- `78` community entries
+
+Representative entries include `Math-MCP`, `Gmail`, `GitHub`, `Browserbase`,
+`Google Sheets`, `Notion`, `US Weather`, and `Context7`. The full committed
+corpus keeps the original `name`, `url`, `desc`, `verified`, and `uses` fields
+so reviewers can see exactly where each benchmarked MCP entry came from.
+
+### Methodology
+
+- For each level (`10`, `20`, `40`, `50`, `100`), we take the top-`N` MCPs by
+  the provided `uses` count.
+- Each registry entry is normalized into **one conservative proxy tool** built
+  from its public name and description.
+- Token counts use the same rough **4 chars ≈ 1 token** heuristic as
+  `tests/integration/test_efficiency.py`.
+- Latency is **client-side p50** over `400` iterations.
+- This is intentionally conservative: many real MCPs expose **multiple tools**
+  and much larger schemas, so the naive prompt-size line below is a **lower
+  bound**.
+
+### Token growth
+
+![Token growth benchmark](docs/benchmarks/registry_scale_tokens.svg)
+
+### Client-side latency
+
+![Latency benchmark](docs/benchmarks/registry_scale_latency.svg)
+
+### What the plots show
+
+- At **100 MCPs**, the naive upfront tool dump reaches **10,231 tokens**.
+- The lazy model-facing contract stays flat at **872 tokens** (**11.7x
+  smaller**).
+- Even the first lazy discovery payload is only **1,258 tokens**, because
+  discovery stays bounded instead of shipping every MCP upfront.
+- Prompt preparation for the fixed 3-tool lazy surface stayed flat at about
+  **0.016 ms p50** across the whole corpus.
+- `discover_mcp_tools()` on the 100-MCP corpus stayed at **3.48 ms p50**.
+
+| MCPs | Naive upfront tokens | Lazy 3-tool tokens | Lazy discover tokens | Naive / lazy | Naive prep p50 | Lazy prep p50 | Lazy discover p50 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 10 | 1,006 | 872 | 208 | 1.2x | 0.044 ms | 0.014 ms | 0.382 ms |
+| 20 | 2,018 | 872 | 408 | 2.3x | 0.081 ms | 0.015 ms | 0.712 ms |
+| 40 | 4,057 | 872 | 725 | 4.7x | 0.151 ms | 0.015 ms | 1.391 ms |
+| 50 | 5,092 | 872 | 846 | 5.8x | 0.186 ms | 0.015 ms | 1.728 ms |
+| 100 | 10,231 | 872 | 1,258 | 11.7x | 0.358 ms | 0.016 ms | 3.478 ms |
+
+To regenerate the corpus benchmark:
+
+```bash
+python scripts/generate_registry_scale_benchmarks.py
+```
+
+For live Smithery tool-schema checks against real MCP servers, keep using the
+integration suite above. The registry-scale benchmark here is the broader
+**100-MCP growth view** for the README.
+
+---
+
 ## Why this helps new joiners
 
 A new engineer only needs to learn one repeatable pattern:

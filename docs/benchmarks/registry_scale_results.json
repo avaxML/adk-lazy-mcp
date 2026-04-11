@@ -1,0 +1,68 @@
+{
+  "methodology": {
+    "levels": [
+      10,
+      20,
+      40,
+      50,
+      100
+    ],
+    "chars_per_token": 4,
+    "iterations": 400,
+    "corpus_size": 100,
+    "verified_entries": 22,
+    "community_entries": 78,
+    "notes": [
+      "The corpus is the 100-server manifest supplied for this task.",
+      "Each registry entry is normalized into one conservative proxy tool built from its public name and description.",
+      "Token counts are approximate using the same 4-chars-per-token heuristic as the existing efficiency integration test."
+    ]
+  },
+  "results": [
+    {
+      "mcp_count": 10,
+      "naive_tokens": 1006,
+      "lazy_tokens": 872,
+      "discover_tokens": 208,
+      "naive_prompt_prep_ms_p50": 0.0441,
+      "lazy_prompt_prep_ms_p50": 0.014,
+      "lazy_discover_ms_p50": 0.3817
+    },
+    {
+      "mcp_count": 20,
+      "naive_tokens": 2018,
+      "lazy_tokens": 872,
+      "discover_tokens": 408,
+      "naive_prompt_prep_ms_p50": 0.0812,
+      "lazy_prompt_prep_ms_p50": 0.0145,
+      "lazy_discover_ms_p50": 0.7115
+    },
+    {
+      "mcp_count": 40,
+      "naive_tokens": 4057,
+      "lazy_tokens": 872,
+      "discover_tokens": 725,
+      "naive_prompt_prep_ms_p50": 0.1507,
+      "lazy_prompt_prep_ms_p50": 0.0149,
+      "lazy_discover_ms_p50": 1.391
+    },
+    {
+      "mcp_count": 50,
+      "naive_tokens": 5092,
+      "lazy_tokens": 872,
+      "discover_tokens": 846,
+      "naive_prompt_prep_ms_p50": 0.186,
+      "lazy_prompt_prep_ms_p50": 0.0152,
+      "lazy_discover_ms_p50": 1.728
+    },
+    {
+      "mcp_count": 100,
+      "naive_tokens": 10231,
+      "lazy_tokens": 872,
+      "discover_tokens": 1258,
+      "naive_prompt_prep_ms_p50": 0.3581,
+      "lazy_prompt_prep_ms_p50": 0.0159,
+      "lazy_discover_ms_p50": 3.4777
+    }
+  ]
+}
