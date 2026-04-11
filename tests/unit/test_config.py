@@ -18,7 +18,7 @@ class TestServerConfig:
         assert cfg.trusted is False
 
     def test_empty_name_is_rejected(self) -> None:
-        with pytest.raises((ValidationError, ValueError), match="name is required"):
+        with pytest.raises((ValidationError, ValueError), match="must not be blank"):
             ServerConfig(name="")
 
     def test_unknown_transport_is_rejected(self) -> None:

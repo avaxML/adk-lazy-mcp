@@ -135,7 +135,7 @@ class TestExecute:
         async def _flaky() -> str:
             calls["n"] += 1
             if calls["n"] == 1:
-                raise BrokenPipeError
+                raise BrokenPipeError(32, "broken pipe")
             return "ok"
 
         result = await sm.execute(_flaky, timeout_ms=500, allow_retry=True)

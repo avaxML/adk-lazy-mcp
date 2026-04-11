@@ -56,7 +56,7 @@ class ServerConfig(BaseModel):
     @model_validator(mode="after")
     def _validate(self) -> ServerConfig:
         if not self.name.strip():
-            raise ValueError("ServerConfig.name is required")
+            raise ValueError("ServerConfig.name must not be blank")
         if self.connect_timeout_ms <= 0 or self.call_timeout_ms <= 0:
             raise ValueError(f"{self.name}: timeouts must be positive")
         if self.max_concurrency is not None and self.max_concurrency < 1:
