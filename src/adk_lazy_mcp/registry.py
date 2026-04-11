@@ -85,7 +85,7 @@ class Registry:
 
     async def _ensure_fresh(self, server: str) -> None:
         entry = self._catalog.get_entry(server)
-        if entry.state in {ServerState.UNSEEN, ServerState.STALE} or self._catalog.is_stale(server):
+        if entry.state is ServerState.UNSEEN or self._catalog.is_stale(server):
             await self._hydrate_server(server)
 
     async def discover(self, query: str = "", server: str = "", limit: int = 20) -> dict[str, Any]:
@@ -95,10 +95,15 @@ class Registry:
             if server not in self._server_configs:
                 raise ToolNotFoundError(f"Unknown server: {server}")
             await self._ensure_fresh(server)
+        else:
+            await asyncio.gather(
+                *(self._ensure_fresh(name) for name in self._catalog.server_names()),
+                return_exceptions=False,
+            )
         matches = self._catalog.discover(query, server or None)
         unavailable: list[str] = []
         for name, entry in self._catalog.iter_entries():
-            if entry.state in {ServerState.DEGRADED, ServerState.HYDRATING, ServerState.UNSEEN}:
+            if entry.state in {ServerState.DEGRADED, ServerState.UNSEEN}:
                 unavailable.append(name)
         returned = matches[:cap]
         has_more = len(matches) > len(returned)
@@ -208,7 +213,7 @@ class Registry:
                     "last_error": entry.last_error,
                 }
             )
-            if entry.state in {ServerState.DEGRADED, ServerState.COOLING_OFF}:
+            if entry.state is ServerState.DEGRADED or session.breaker_open:
                 status = "degraded"
         return {"status": status, "servers": servers}
 

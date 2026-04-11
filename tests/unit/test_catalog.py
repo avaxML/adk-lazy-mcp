@@ -39,6 +39,35 @@ class TestToolSchema:
         )
         assert a.schema_hash != b.schema_hash
 
+    def test_hash_is_stable_for_equivalent_nested_schema_order(self) -> None:
+        a = ToolSchema(
+            name="read",
+            description="",
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "x": {
+                        "type": "object",
+                        "properties": {"a": {"type": "string"}, "b": {"type": "integer"}},
+                    }
+                },
+            },
+        )
+        b = ToolSchema(
+            name="read",
+            description="",
+            input_schema={
+                "properties": {
+                    "x": {
+                        "properties": {"b": {"type": "integer"}, "a": {"type": "string"}},
+                        "type": "object",
+                    }
+                },
+                "type": "object",
+            },
+        )
+        assert a.schema_hash == b.schema_hash
+
     def test_lowercased_fields_populated(self) -> None:
         ts = ToolSchema(name="ReadFile", description="Reads FILES", input_schema={})
         assert ts.name_lower == "readfile"

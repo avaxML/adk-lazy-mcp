@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import json
 import time
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -13,11 +14,8 @@ from .config import RegistryConfig, ServerConfig
 
 class ServerState(str, Enum):
     UNSEEN = "unseen"
-    HYDRATING = "hydrating"
     READY = "ready"
     DEGRADED = "degraded"
-    STALE = "stale"
-    COOLING_OFF = "cooling_off"
     CLOSED = "closed"
 
 
@@ -34,9 +32,7 @@ class ToolSchema:
         if not self.schema_hash:
             self.schema_hash = (
                 "sha256:"
-                + hashlib.sha256(
-                    repr(sorted(self.input_schema.items())).encode("utf-8")
-                ).hexdigest()
+                + hashlib.sha256(_canonical_json(self.input_schema).encode("utf-8")).hexdigest()
             )
         self.name_lower = self.name.lower()
         self.description_lower = self.description.lower()
@@ -142,3 +138,8 @@ class CatalogManager:
     def _catalog_hash(tools: dict[str, ToolSchema]) -> str:
         payload = "|".join(sorted(f"{k}:{v.description}" for k, v in tools.items()))
         return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _canonical_json(value: Any) -> str:
+    """Return a stable JSON string so semantically equal schemas hash the same."""
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)

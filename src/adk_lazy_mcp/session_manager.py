@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import asyncio
+import time
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -13,12 +15,14 @@ _DEFAULT_CONCURRENCY = {
 }
 
 _FAILURE_THRESHOLD = 3
+_BREAKER_RESET_TIMEOUT_S = 30.0
 
 
 @dataclass
 class BreakerState:
     failures: int = 0
     open: bool = False
+    opened_at: float | None = None
 
 
 class SessionManager:
@@ -38,9 +42,17 @@ class SessionManager:
     def breaker_open(self) -> bool:
         return self._breaker.open
 
+    @property
+    def breaker_failures(self) -> int:
+        return self._breaker.failures
+
+    @property
+    def breaker_opened_at(self) -> float | None:
+        return self._breaker.opened_at
+
     async def execute(
         self,
-        call_coro: Any,
+        call_coro: Callable[[], Awaitable[Any]],
         *,
         timeout_ms: int,
         allow_retry: bool,
@@ -48,7 +60,9 @@ class SessionManager:
         if self._closed:
             raise RuntimeError("session_closed")
         if self._breaker.open:
-            raise RuntimeError("circuit_open")
+            if not self._breaker_ready():
+                raise RuntimeError("circuit_open")
+            self._reset_breaker()
 
         timeout_s = timeout_ms / 1000
         async with self._sem:
@@ -78,6 +92,18 @@ class SessionManager:
         self._breaker.failures += 1
         if self._breaker.failures >= _FAILURE_THRESHOLD:
             self._breaker.open = True
+            self._breaker.opened_at = time.monotonic()
+
+    def _reset_breaker(self) -> None:
+        self._breaker.failures = 0
+        self._breaker.open = False
+        self._breaker.opened_at = None
+
+    def _breaker_ready(self) -> bool:
+        opened_at = self._breaker.opened_at
+        if opened_at is None:
+            return False
+        return (time.monotonic() - opened_at) >= _BREAKER_RESET_TIMEOUT_S
 
     @staticmethod
     def _is_retryable(exc: RuntimeError) -> bool:

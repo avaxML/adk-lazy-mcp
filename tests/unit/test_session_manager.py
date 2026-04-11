@@ -49,7 +49,7 @@ class TestExecute:
 
         with pytest.raises(asyncio.TimeoutError):
             await sm.execute(_slow, timeout_ms=10, allow_retry=False)
-        assert sm._breaker.failures == 1  # type: ignore[attr-defined]
+        assert sm.breaker_failures == 1
 
     async def test_breaker_opens_after_three_failures(self) -> None:
         sm = SessionManager(ServerConfig(name="fs"))
@@ -65,6 +65,28 @@ class TestExecute:
         with pytest.raises(RuntimeError, match="circuit_open"):
             await sm.execute(_ok, timeout_ms=500, allow_retry=False)
 
+    async def test_breaker_recovers_after_cooldown(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        now = 100.0
+        monkeypatch.setattr("adk_lazy_mcp.session_manager.time.monotonic", lambda: now)
+        sm = SessionManager(ServerConfig(name="fs"))
+
+        async def _boom() -> None:
+            raise RuntimeError("explode")
+
+        for _ in range(3):
+            with pytest.raises(RuntimeError, match="explode"):
+                await sm.execute(_boom, timeout_ms=500, allow_retry=False)
+
+        with pytest.raises(RuntimeError, match="circuit_open"):
+            await sm.execute(_ok, timeout_ms=500, allow_retry=False)
+        assert sm.breaker_opened_at == 100.0
+
+        now += 30.0
+        result = await sm.execute(_ok, timeout_ms=500, allow_retry=False)
+        assert result == {"ok": True}
+        assert sm.breaker_open is False
+        assert sm.breaker_failures == 0
+
     async def test_allow_retry_succeeds_on_second_attempt(self) -> None:
         sm = SessionManager(ServerConfig(name="fs"))
         calls = {"n": 0}
@@ -79,7 +101,7 @@ class TestExecute:
         assert result == "ok"
         assert calls["n"] == 2
         # Success after retry resets the breaker counter.
-        assert sm._breaker.failures == 0  # type: ignore[attr-defined]
+        assert sm.breaker_failures == 0
         assert sm.breaker_open is False
 
     async def test_allow_retry_false_does_not_retry(self) -> None:
@@ -117,7 +139,7 @@ class TestExecute:
         with pytest.raises(RuntimeError, match="broken_pipe"):
             await sm.execute(_always, timeout_ms=500, allow_retry=True)
         assert calls["n"] == 2
-        assert sm._breaker.failures == 1  # type: ignore[attr-defined]
+        assert sm.breaker_failures == 1
 
     async def test_closed_session_rejects_execute(self) -> None:
         sm = SessionManager(ServerConfig(name="fs"))
@@ -133,10 +155,10 @@ class TestExecute:
 
         with pytest.raises(RuntimeError, match="explode"):
             await sm.execute(_boom, timeout_ms=500, allow_retry=False)
-        assert sm._breaker.failures == 1  # type: ignore[attr-defined]
+        assert sm.breaker_failures == 1
 
         await sm.execute(_ok, timeout_ms=500, allow_retry=False)
-        assert sm._breaker.failures == 0  # type: ignore[attr-defined]
+        assert sm.breaker_failures == 0
 
     async def test_concurrency_limit_is_enforced(self) -> None:
         sm = SessionManager(ServerConfig(name="fs", max_concurrency=2))
