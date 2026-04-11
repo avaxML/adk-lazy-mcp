@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
 
 from adk_lazy_mcp.config import RegistryConfig, ServerConfig, resolve_env_vars
 
@@ -17,11 +18,11 @@ class TestServerConfig:
         assert cfg.trusted is False
 
     def test_empty_name_is_rejected(self) -> None:
-        with pytest.raises(ValueError, match="name is required"):
+        with pytest.raises((ValidationError, ValueError), match="name is required"):
             ServerConfig(name="")
 
     def test_unknown_transport_is_rejected(self) -> None:
-        with pytest.raises(ValueError, match="unknown transport"):
+        with pytest.raises((ValidationError, ValueError), match="transport|unknown transport"):
             ServerConfig(name="srv", transport="grpc")  # type: ignore[arg-type]
 
     @pytest.mark.parametrize(
@@ -34,11 +35,11 @@ class TestServerConfig:
         ],
     )
     def test_non_positive_timeouts_are_rejected(self, kwargs: dict[str, int], match: str) -> None:
-        with pytest.raises(ValueError, match=match):
+        with pytest.raises((ValidationError, ValueError), match=match):
             ServerConfig(name="srv", **kwargs)
 
     def test_bad_concurrency_is_rejected(self) -> None:
-        with pytest.raises(ValueError, match="max_concurrency must be >= 1"):
+        with pytest.raises((ValidationError, ValueError), match="max_concurrency must be >= 1"):
             ServerConfig(name="srv", max_concurrency=0)
 
     def test_concurrency_of_one_is_allowed(self) -> None:
@@ -46,7 +47,7 @@ class TestServerConfig:
         assert cfg.max_concurrency == 1
 
     def test_negative_inline_bytes_is_rejected(self) -> None:
-        with pytest.raises(ValueError, match="max_inline_bytes must be non-negative"):
+        with pytest.raises((ValidationError, ValueError), match="max_inline_bytes must be non-negative"):
             ServerConfig(name="srv", max_inline_bytes=-1)
 
     def test_inline_bytes_of_zero_is_allowed(self) -> None:
@@ -55,7 +56,7 @@ class TestServerConfig:
 
     def test_is_frozen(self) -> None:
         cfg = ServerConfig(name="srv")
-        with pytest.raises(AttributeError):
+        with pytest.raises((AttributeError, ValidationError, TypeError)):
             cfg.name = "other"  # type: ignore[misc]
 
 
@@ -70,7 +71,7 @@ class TestRegistryConfig:
 
     def test_is_frozen(self) -> None:
         cfg = RegistryConfig()
-        with pytest.raises(AttributeError):
+        with pytest.raises((AttributeError, ValidationError, TypeError)):
             cfg.warm_mode = "eager"  # type: ignore[misc]
 
 

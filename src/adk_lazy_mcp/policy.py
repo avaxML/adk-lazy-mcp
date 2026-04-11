@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from urllib.parse import urlparse
+
+from pydantic import BaseModel, ConfigDict
 
 from .config import ServerConfig
 
 
-@dataclass(frozen=True)
-class PolicyDecision:
+class PolicyDecision(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     allowed: bool
     reason: str | None = None
 

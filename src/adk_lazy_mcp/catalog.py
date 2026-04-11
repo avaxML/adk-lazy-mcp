@@ -5,9 +5,10 @@ import hashlib
 import json
 import time
 from collections.abc import Iterator
-from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
+
+from pydantic import BaseModel, Field
 
 from .config import RegistryConfig, ServerConfig
 
@@ -19,8 +20,7 @@ class ServerState(str, Enum):
     CLOSED = "closed"
 
 
-@dataclass
-class ToolSchema:
+class ToolSchema(BaseModel):
     name: str
     description: str
     input_schema: dict[str, Any]
@@ -28,7 +28,7 @@ class ToolSchema:
     name_lower: str = ""
     description_lower: str = ""
 
-    def __post_init__(self) -> None:
+    def model_post_init(self, __context: Any) -> None:
         if not self.schema_hash:
             self.schema_hash = (
                 "sha256:"
@@ -38,11 +38,10 @@ class ToolSchema:
         self.description_lower = self.description.lower()
 
 
-@dataclass
-class CatalogEntry:
+class CatalogEntry(BaseModel):
     config: ServerConfig
     state: ServerState = ServerState.UNSEEN
-    tools: dict[str, ToolSchema] = field(default_factory=dict)
+    tools: dict[str, ToolSchema] = Field(default_factory=dict)
     refreshed_at: float = 0.0
     last_error: str | None = None
     version: str = ""

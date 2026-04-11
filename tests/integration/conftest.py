@@ -17,10 +17,10 @@ import contextlib
 import json
 import os
 from collections.abc import AsyncIterator, Awaitable, Callable
-from dataclasses import dataclass
 from typing import Any
 
 import pytest
+from pydantic import BaseModel
 
 # Skip this whole folder unless both prerequisites are met.
 mcp = pytest.importorskip("mcp", reason="the 'mcp' package is required for integration tests")
@@ -74,8 +74,7 @@ async def _open_session(reference: str) -> AsyncIterator[ClientSession]:
             yield session
 
 
-@dataclass
-class SmitheryClient:
+class SmitheryClient(BaseModel):
     """Adapter exposing the callback shape ``LazyMCPToolset`` expects.
 
     Each call to ``list_tools`` / ``execute_tool`` opens a fresh MCP session
