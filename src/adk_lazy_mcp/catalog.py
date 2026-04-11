@@ -165,7 +165,7 @@ class CatalogManager:
             if e.state != ServerState.READY:
                 continue
             matches.extend(self._rank_server_matches(name, e, q))
-        matches.sort(key=lambda item: (-item.score, item.tool))
+        matches.sort(key=lambda item: (-item.score, item.tool, item.server))
         return [self._serialize_match(match) for match in matches]
 
     @staticmethod
