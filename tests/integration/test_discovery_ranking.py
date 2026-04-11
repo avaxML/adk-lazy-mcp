@@ -38,7 +38,7 @@ _EXTENDED_SERVER_CONFIGS = [
 async def _build_extended_toolset(
     callbacks: ADKCallbacks,
     *,
-    warm_mode: str = "eager",
+    warm_mode: str = "on_demand",
 ) -> LazyMCPToolset:
     list_tools, execute_tool = callbacks
     return LazyMCPToolset(
@@ -283,18 +283,21 @@ async def test_semantic_fallback_close_variant(
 ) -> None:
     """A semantically close query should still find relevant tools.
 
-    ``"addition"`` should surface the ``add`` tool via trigram-based semantic
-    overlap even if "addition" is not literally a term in the tool document.
+    ``"sequantialthinking"`` is a typo that should still surface the
+    ``sequentialthinking`` tool via trigram-based semantic overlap.
     """
     toolset = await _build_extended_toolset(extended_adk_callbacks)
     try:
         await toolset.get_tools()
-        result = await toolset.discover_mcp_tools(query="addition")
+        result = await toolset.discover_mcp_tools(
+            query="sequantialthinking",
+            server="sequential_thinking",
+        )
         assert result["status"] == "success"
         names = _tool_names(result)
-        # "add" should appear via BM25 substring/description match or
-        # semantic fallback.
-        assert "add" in names, f"'add' not found via semantic fallback: {names[:10]}"
+        assert "sequentialthinking" in names, (
+            f"'sequentialthinking' not found via semantic fallback: {names[:10]}"
+        )
     finally:
         await toolset.close()
 

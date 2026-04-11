@@ -20,7 +20,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable
 from typing import Any
 
 import pytest
-from pydantic import BaseModel
+from pydantic import BaseModel, PrivateAttr
 
 # Skip this whole folder unless both prerequisites are met.
 mcp = pytest.importorskip("mcp", reason="the 'mcp' package is required for integration tests")
@@ -34,7 +34,7 @@ if not os.environ.get("SMITHERY_API_KEY"):
 # ``mcp`` is available: import the bits we need. Done lazily so the top-level
 # skip above runs before we touch any optional submodules.
 from mcp import ClientSession  # noqa: E402
-from mcp.client.streamable_http import streamablehttp_client  # noqa: E402
+from mcp.client.streamable_http import streamable_http_client  # noqa: E402
 
 SMITHERY_BASE = "https://server.smithery.ai"
 
@@ -90,7 +90,7 @@ def _server_url(reference: str, config: dict[str, Any] | None = None) -> str:
 @contextlib.asynccontextmanager
 async def _open_session(reference: str) -> AsyncIterator[ClientSession]:
     url = _server_url(reference)
-    async with streamablehttp_client(url) as (read, write, _close):
+    async with streamable_http_client(url) as (read, write, _close):
         async with ClientSession(read, write) as session:
             await session.initialize()
             yield session
@@ -111,10 +111,22 @@ class SmitheryClient(BaseModel):
     """
 
     references: dict[str, str]
+    _tool_cache: dict[str, list[dict[str, Any]]] = PrivateAttr(default_factory=dict)
+    _tool_errors: dict[str, str] = PrivateAttr(default_factory=dict)
 
     async def list_tools(self, server: str) -> list[dict[str, Any]]:
+        cached = self._tool_cache.get(server)
+        if cached is not None:
+            return cached
+        cached_error = self._tool_errors.get(server)
+        if cached_error is not None:
+            raise RuntimeError(cached_error)
         async with _open_session(self.references[server]) as session:
-            response = await session.list_tools()
+            try:
+                response = await session.list_tools()
+            except Exception as exc:
+                self._tool_errors[server] = str(exc)
+                raise
             out: list[dict[str, Any]] = []
             for tool in response.tools:
                 out.append(
@@ -124,6 +136,7 @@ class SmitheryClient(BaseModel):
                         "inputSchema": tool.inputSchema or {"type": "object"},
                     }
                 )
+            self._tool_cache[server] = out
             return out
 
     async def execute_tool(
@@ -153,7 +166,7 @@ class SmitheryClient(BaseModel):
             }
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def smithery_client() -> SmitheryClient:
     """Return a session-opening adapter for the default Smithery MCPs.
 
@@ -181,7 +194,7 @@ def adk_callbacks(
 # ---------------------------------------------------------------------------
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def extended_smithery_client() -> SmitheryClient:
     """Return a session-opening adapter for the *extended* set of Smithery MCPs.
 
