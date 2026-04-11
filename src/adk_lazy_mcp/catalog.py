@@ -22,21 +22,29 @@ _BM25_K1 = 1.6
 _BM25_B = 0.75
 _RRF_K = 60
 _SEMANTIC_RERANK_LIMIT = 12
-_SEMANTIC_FALLBACK_THRESHOLD = 0.2
+_SEMANTIC_FALLBACK_THRESHOLD = 0.15
 _LEADER_CLUSTER_THRESHOLD = 0.35
 _CLUSTER_STOPWORDS = frozenset(
     {
         "and",
         "for",
+        "file",
+        "files",
         "from",
         "input",
         "json",
         "object",
         "output",
+        "path",
         "the",
+        "text",
         "tool",
         "type",
+        "value",
+        "values",
         "with",
+        "content",
+        "contents",
     }
 )
 
@@ -65,7 +73,9 @@ class ToolSchema(BaseModel):
             )
         self.name_lower = self.name.lower()
         self.description_lower = self.description.lower()
-        self.search_terms = tuple(_build_document_terms(self.name, self.description, self.input_schema))
+        self.search_terms = tuple(
+            _build_document_terms(self.name, self.description, self.input_schema)
+        )
 
 
 class CatalogEntry(BaseModel):
@@ -175,7 +185,9 @@ class CatalogManager:
                 )
         return results
 
-    def _rank_server_matches(self, server: str, entry: CatalogEntry, query: str) -> list[_SearchMatch]:
+    def _rank_server_matches(
+        self, server: str, entry: CatalogEntry, query: str
+    ) -> list[_SearchMatch]:
         lexical_index = self._lexical_indexes[server]
         lexical_matches = lexical_index.search(query, entry.tools)
         if not lexical_matches:
@@ -231,13 +243,18 @@ class CatalogManager:
         return matches
 
     def _semantic_scores(
-        self, server: str, tool_names: Iterator[str] | list[str] | dict[str, ToolSchema].keys, query: str
+        self,
+        server: str,
+        tool_names: Iterator[str] | list[str] | dict[str, ToolSchema].keys,
+        query: str,
     ) -> dict[str, float]:
         query_vector = _build_semantic_vector(_tokenize_text(query))
         if not query_vector:
             return {}
         return {
-            tool_name: _cosine_similarity(query_vector, self._semantic_vectors[server].get(tool_name, {}))
+            tool_name: _cosine_similarity(
+                query_vector, self._semantic_vectors[server].get(tool_name, {})
+            )
             for tool_name in tool_names
         }
 
@@ -408,7 +425,7 @@ def _build_semantic_vector(tokens: tuple[str, ...] | list[str]) -> dict[str, flo
             continue
         padded = f"^{token}$"
         for idx in range(len(padded) - 2):
-            features[f"tri:{padded[idx:idx + 3]}"] += 0.35
+            features[f"tri:{padded[idx : idx + 3]}"] += 0.35
     norm = math.sqrt(sum(weight * weight for weight in features.values()))
     if norm == 0.0:
         return {}
@@ -445,9 +462,7 @@ def _build_tool_families(tools: dict[str, ToolSchema]) -> dict[str, str]:
 
 def _cluster_signature(tool: ToolSchema) -> set[str]:
     return {
-        token
-        for token in tool.search_terms
-        if len(token) > 2 and token not in _CLUSTER_STOPWORDS
+        token for token in tool.search_terms if len(token) > 2 and token not in _CLUSTER_STOPWORDS
     }
 
 

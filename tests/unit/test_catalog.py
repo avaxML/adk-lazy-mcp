@@ -180,13 +180,15 @@ class TestCatalogManager:
             ],
         )
 
-        results = manager.discover("read")
+        results = manager.discover("")
 
         families = {item["tool"]: item["family"] for item in results}
         assert families["read_file"] == families["read_text"]
         assert families["write_file"] != families["read_file"]
 
-    async def test_discover_semantic_fallback_handles_close_variants(self, manager: CatalogManager) -> None:
+    async def test_discover_semantic_fallback_handles_close_variants(
+        self, manager: CatalogManager
+    ) -> None:
         await manager.hydrate_server("filesystem", [_tool("write_file", "Write file contents")])
 
         results = manager.discover("writer")
