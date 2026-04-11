@@ -32,6 +32,32 @@ pytest                   # unit tests (default, skips integration)
 pytest --cov=adk_lazy_mcp --cov-report=term-missing
 ```
 
+### Environment-backed registry and retrieval settings
+
+`RegistryConfig()` now reads environment variables via Pydantic Settings with
+the `ADK_LAZY_MCP_` prefix. Existing explicit constructor arguments still work
+and override environment values.
+
+Examples:
+
+```bash
+export ADK_LAZY_MCP_WARM_MODE=on_demand
+export ADK_LAZY_MCP_MAX_DISCOVER_RESULTS=50
+export ADK_LAZY_MCP_RETRIEVAL__BM25_K1=1.8
+export ADK_LAZY_MCP_RETRIEVAL__BM25_B=0.7
+export ADK_LAZY_MCP_RETRIEVAL__RECIPROCAL_RANK_K=40
+export ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_RERANK_LIMIT=8
+export ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_FALLBACK_THRESHOLD=0.2
+export ADK_LAZY_MCP_RETRIEVAL__LEADER_CLUSTER_THRESHOLD=0.4
+export ADK_LAZY_MCP_RETRIEVAL__MIN_CLUSTER_TOKEN_LENGTH=4
+export ADK_LAZY_MCP_RETRIEVAL__NAME_TERM_WEIGHT=4
+export ADK_LAZY_MCP_RETRIEVAL__SCHEMA_PROPERTY_WEIGHT=3
+export ADK_LAZY_MCP_RETRIEVAL__REQUIRED_FIELD_WEIGHT=3
+export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_SIZE=4
+export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_WEIGHT=0.25
+export ADK_LAZY_MCP_RETRIEVAL__CLUSTER_STOPWORDS='["and","for","file","tool"]'
+```
+
 ### Integration tests against Smithery
 
 The `tests/integration/` suite exercises `LazyMCPToolset` against real

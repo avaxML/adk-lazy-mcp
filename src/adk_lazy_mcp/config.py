@@ -1,13 +1,36 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 from collections.abc import Mapping
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _ENV_RE = re.compile(r"\$\{([A-Z0-9_]+)(?::-([^}]*))?\}")
+_DEFAULT_CLUSTER_STOPWORDS = (
+    "and",
+    "for",
+    "file",
+    "files",
+    "from",
+    "input",
+    "json",
+    "object",
+    "output",
+    "path",
+    "the",
+    "text",
+    "tool",
+    "type",
+    "value",
+    "values",
+    "with",
+    "content",
+    "contents",
+)
 
 
 class ServerConfig(BaseModel):
@@ -42,14 +65,86 @@ class ServerConfig(BaseModel):
         return self
 
 
-class RegistryConfig(BaseModel):
+class RetrievalConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
+
+    bm25_k1: float = 1.6
+    bm25_b: float = 0.75
+    reciprocal_rank_k: int = 60
+    semantic_rerank_limit: int = 12
+    semantic_fallback_threshold: float = 0.15
+    leader_cluster_threshold: float = 0.35
+    min_cluster_token_length: int = 3
+    name_term_weight: int = 3
+    schema_property_weight: int = 2
+    required_field_weight: int = 2
+    trigram_size: int = 3
+    trigram_weight: float = 0.35
+    cluster_stopwords: tuple[str, ...] = _DEFAULT_CLUSTER_STOPWORDS
+
+    @field_validator("cluster_stopwords", mode="before")
+    @classmethod
+    def _parse_cluster_stopwords(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+        stripped = value.strip()
+        if not stripped:
+            return ()
+        if stripped.startswith("["):
+            return json.loads(stripped)
+        return tuple(part.strip() for part in stripped.split(","))
+
+    @field_validator("cluster_stopwords")
+    @classmethod
+    def _normalize_cluster_stopwords(cls, value: tuple[str, ...]) -> tuple[str, ...]:
+        normalized = [
+            item.strip().lower() for item in value if isinstance(item, str) and item.strip()
+        ]
+        return tuple(dict.fromkeys(normalized))
+
+    @model_validator(mode="after")
+    def _validate(self) -> RetrievalConfig:
+        if self.bm25_k1 <= 0:
+            raise ValueError("bm25_k1 must be positive")
+        if not 0 <= self.bm25_b <= 1:
+            raise ValueError("bm25_b must be between 0 and 1")
+        if self.reciprocal_rank_k < 0:
+            raise ValueError("reciprocal_rank_k must be non-negative")
+        if self.semantic_rerank_limit < 1:
+            raise ValueError("semantic_rerank_limit must be >= 1")
+        if not 0 <= self.semantic_fallback_threshold <= 1:
+            raise ValueError("semantic_fallback_threshold must be between 0 and 1")
+        if not 0 <= self.leader_cluster_threshold <= 1:
+            raise ValueError("leader_cluster_threshold must be between 0 and 1")
+        if self.min_cluster_token_length < 1:
+            raise ValueError("min_cluster_token_length must be >= 1")
+        if self.name_term_weight < 1:
+            raise ValueError("name_term_weight must be >= 1")
+        if self.schema_property_weight < 1:
+            raise ValueError("schema_property_weight must be >= 1")
+        if self.required_field_weight < 1:
+            raise ValueError("required_field_weight must be >= 1")
+        if self.trigram_size < 1:
+            raise ValueError("trigram_size must be >= 1")
+        if self.trigram_weight <= 0:
+            raise ValueError("trigram_weight must be positive")
+        return self
+
+
+class RegistryConfig(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_prefix="ADK_LAZY_MCP_",
+        env_nested_delimiter="__",
+        extra="ignore",
+        frozen=True,
+    )
 
     warm_mode: Literal["background", "eager", "on_demand"] = "background"
     summary_ttl_s: int = 300
     max_discover_results: int = 20
     hard_discover_cap: int = 100
     enable_client_validation: bool = True
+    retrieval: RetrievalConfig = Field(default_factory=RetrievalConfig)
 
 
 def resolve_env_vars(value: str, *, strict: bool = True) -> str:

@@ -1,4 +1,4 @@
-from .config import RegistryConfig, ServerConfig, resolve_env_vars
+from .config import RegistryConfig, RetrievalConfig, ServerConfig, resolve_env_vars
 from .errors import (
     LazyMCPError,
     PolicyDeniedError,
@@ -14,6 +14,7 @@ __all__ = [
     "PolicyDeniedError",
     "RegistryClosedError",
     "RegistryConfig",
+    "RetrievalConfig",
     "ServerConfig",
     "ToolNotFoundError",
     "ValidationError",

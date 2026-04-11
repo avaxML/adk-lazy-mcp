@@ -12,7 +12,7 @@ from adk_lazy_mcp.catalog import (
     ToolSchema,
     _reciprocal_rank_fusion_score,
 )
-from adk_lazy_mcp.config import RegistryConfig, ServerConfig
+from adk_lazy_mcp.config import RegistryConfig, RetrievalConfig, ServerConfig
 
 
 def _tool(name: str, description: str = "", schema: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -226,6 +226,47 @@ class TestCatalogManager:
 
         assert [match.tool for match in matches] == ["alpha", "beta"]
         assert [match.score for match in matches] == [
-            _reciprocal_rank_fusion_score(1),
-            _reciprocal_rank_fusion_score(2),
+            _reciprocal_rank_fusion_score(1, manager._cfg.retrieval),
+            _reciprocal_rank_fusion_score(2, manager._cfg.retrieval),
         ]
+
+    async def test_discover_respects_semantic_fallback_threshold_override(self) -> None:
+        manager = CatalogManager(
+            RegistryConfig(
+                summary_ttl_s=300,
+                retrieval=RetrievalConfig(semantic_fallback_threshold=0.3),
+            )
+        )
+        manager.register_server(ServerConfig(name="filesystem"))
+
+        await manager.hydrate_server("filesystem", [_tool("write_file", "Write file contents")])
+
+        results = manager.discover("writer")
+
+        assert results == []
+
+    async def test_discover_respects_family_clustering_override(self) -> None:
+        manager = CatalogManager(
+            RegistryConfig(
+                summary_ttl_s=300,
+                retrieval=RetrievalConfig(
+                    leader_cluster_threshold=0.35,
+                    cluster_stopwords=("read",),
+                ),
+            )
+        )
+        manager.register_server(ServerConfig(name="filesystem"))
+
+        await manager.hydrate_server(
+            "filesystem",
+            [
+                _tool("read_file", "Read file contents"),
+                _tool("read_text", "Read text contents"),
+            ],
+        )
+
+        results = manager.discover("")
+
+        families = {item["tool"]: item["family"] for item in results}
+        assert families["read_file"] == "read_file"
+        assert families["read_text"] == "read_text"
