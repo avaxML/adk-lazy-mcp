@@ -103,9 +103,10 @@ class TestRegistryConfig:
 
 
 class TestRetrievalConfig:
-    def test_invalid_threshold_is_rejected(self) -> None:
+    @pytest.mark.parametrize("threshold", [-0.1, 1.5])
+    def test_invalid_threshold_is_rejected(self, threshold: float) -> None:
         with pytest.raises((ValidationError, ValueError), match="semantic_fallback_threshold"):
-            RetrievalConfig(semantic_fallback_threshold=1.5)
+            RetrievalConfig(semantic_fallback_threshold=threshold)
 
 
 class TestResolveEnvVars:
