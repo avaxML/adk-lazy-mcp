@@ -108,6 +108,17 @@ class TestRetrievalConfig:
         with pytest.raises((ValidationError, ValueError), match="semantic_fallback_threshold"):
             RetrievalConfig(semantic_fallback_threshold=threshold)
 
+    def test_global_score_weight_defaults_to_zero(self) -> None:
+        assert RetrievalConfig().global_score_weight == 0.0
+
+    def test_global_score_weight_rejects_negative(self) -> None:
+        with pytest.raises((ValidationError, ValueError), match="global_score_weight"):
+            RetrievalConfig(global_score_weight=-0.1)
+
+    def test_global_score_weight_accepts_positive(self) -> None:
+        cfg = RetrievalConfig(global_score_weight=0.05)
+        assert cfg.global_score_weight == 0.05
+
 
 class TestResolveEnvVars:
     def test_plain_value_is_passthrough(self) -> None:

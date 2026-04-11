@@ -189,11 +189,20 @@ class CatalogManager:
             )
         }
         families = self._tool_families.get(server, {})
+        global_weight = self._retrieval.global_score_weight
         ranked: list[_SearchMatch] = []
-        for lexical_rank, (tool_name, _) in enumerate(lexical_matches, start=1):
+        for lexical_rank, (tool_name, raw_lexical) in enumerate(lexical_matches, start=1):
             score = _reciprocal_rank_fusion_score(lexical_rank, self._retrieval)
             if tool_name in semantic_ranks:
                 score += _reciprocal_rank_fusion_score(semantic_ranks[tool_name], self._retrieval)
+            # Optional cross-server tiebreaker: add a small fraction of the raw
+            # BM25 score. This is zero by default so existing behavior is
+            # preserved; the benchmarks use a tuned value to break per-server
+            # RRF ties when ranking across many MCPs.
+            if global_weight > 0 and raw_lexical > 0:
+                score += raw_lexical * global_weight
+                if tool_name in semantic_scores and semantic_scores[tool_name] > 0:
+                    score += semantic_scores[tool_name] * global_weight
             ranked.append(
                 _SearchMatch(
                     server=server,

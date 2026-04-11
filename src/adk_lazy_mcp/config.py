@@ -81,6 +81,15 @@ class RetrievalConfig(BaseModel):
     required_field_weight: int = 2
     trigram_size: int = 3
     trigram_weight: float = 0.35
+    # Weight applied to the raw per-server BM25 score when fusing cross-server
+    # matches. Default 0 reproduces the legacy pure-RRF behavior (every
+    # server's top match ties with every other server's top match and
+    # alphabetical order decides the winner). Setting this to a small positive
+    # value (e.g. 0.05) lets strong raw lexical hits from one server out-rank
+    # weak hits from another server, dramatically improving cross-server
+    # recall@1 on heterogeneous catalogs. Tuned via the benchmarks suite in
+    # ``benchmarks/scripts/tune_discovery.py``.
+    global_score_weight: float = 0.0
     cluster_stopwords: tuple[str, ...] = _DEFAULT_CLUSTER_STOPWORDS
 
     @field_validator("cluster_stopwords", mode="before")
@@ -131,6 +140,8 @@ class RetrievalConfig(BaseModel):
             raise ValueError("trigram_size must be >= 1")
         if self.trigram_weight <= 0:
             raise ValueError("trigram_weight must be positive")
+        if self.global_score_weight < 0:
+            raise ValueError("global_score_weight must be non-negative")
         return self
 
 
