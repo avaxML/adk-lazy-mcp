@@ -5,7 +5,7 @@ import hashlib
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Iterator
 
 from .config import RegistryConfig, ServerConfig
 
@@ -25,6 +25,18 @@ class ToolSchema:
     name: str
     description: str
     input_schema: dict[str, Any]
+    schema_hash: str = ""
+    name_lower: str = ""
+    description_lower: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.schema_hash:
+            self.schema_hash = (
+                "sha256:"
+                + hashlib.sha256(repr(sorted(self.input_schema.items())).encode("utf-8")).hexdigest()
+            )
+        self.name_lower = self.name.lower()
+        self.description_lower = self.description.lower()
 
 
 @dataclass
@@ -49,20 +61,26 @@ class CatalogManager:
     def get_entry(self, server: str) -> CatalogEntry:
         return self._entries[server]
 
+    def iter_entries(self) -> Iterator[tuple[str, CatalogEntry]]:
+        return iter(self._entries.items())
+
+    def server_names(self) -> list[str]:
+        return sorted(self._entries.keys())
+
     async def hydrate_server(self, server: str, tools: list[dict[str, Any]]) -> None:
+        mapped: dict[str, ToolSchema] = {}
+        for t in tools:
+            mapped[t["name"]] = ToolSchema(
+                name=t["name"],
+                description=t.get("description", ""),
+                input_schema=t.get("inputSchema", {"type": "object", "properties": {}}),
+            )
+        version = self._catalog_hash(mapped)
         async with self._lock:
             entry = self._entries[server]
-            entry.state = ServerState.HYDRATING
-            mapped: dict[str, ToolSchema] = {}
-            for t in tools:
-                mapped[t["name"]] = ToolSchema(
-                    name=t["name"],
-                    description=t.get("description", ""),
-                    input_schema=t.get("inputSchema", {"type": "object", "properties": {}}),
-                )
             entry.tools = mapped
             entry.refreshed_at = time.time()
-            entry.version = self._catalog_hash(mapped)
+            entry.version = version
             entry.last_error = None
             entry.state = ServerState.READY
 
@@ -73,43 +91,47 @@ class CatalogManager:
 
     def is_stale(self, server: str) -> bool:
         e = self._entries[server]
+        if e.refreshed_at == 0.0:
+            return True
         return (time.time() - e.refreshed_at) > self._cfg.summary_ttl_s
 
     def discover(self, query: str, server: str | None = None) -> list[dict[str, str]]:
         q = query.strip().lower()
-        results: list[tuple[int, dict[str, str]]] = []
-        for name, e in self._entries.items():
-            if server and name != server:
+        results: list[tuple[int, str, dict[str, str]]] = []
+        entries = ((server, self._entries[server]),) if server else self._entries.items()
+        for name, e in entries:
+            if e.state != ServerState.READY:
                 continue
             for tool in e.tools.values():
                 score = self._score(q, tool)
-                if score >= 0:
-                    results.append(
-                        (
-                            score,
-                            {
-                                "server": name,
-                                "tool": tool.name,
-                                "description": tool.description,
-                            },
-                        )
+                if score < 0:
+                    continue
+                results.append(
+                    (
+                        score,
+                        tool.name,
+                        {
+                            "server": name,
+                            "tool": tool.name,
+                            "description": tool.description,
+                        },
                     )
-        results.sort(key=lambda x: (-x[0], x[1]["tool"]))
-        return [x[1] for x in results]
+                )
+        results.sort(key=lambda x: (-x[0], x[1]))
+        return [r[2] for r in results]
 
     @staticmethod
     def _score(query: str, tool: ToolSchema) -> int:
         if not query:
             return 1
-        name = tool.name.lower()
-        desc = tool.description.lower()
+        name = tool.name_lower
         if name == query:
             return 100
         if name.startswith(query):
             return 80
         if query in name:
             return 60
-        if query in desc:
+        if query in tool.description_lower:
             return 40
         return -1
 

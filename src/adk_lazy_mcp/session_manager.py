@@ -12,6 +12,8 @@ _DEFAULT_CONCURRENCY = {
     "sse_legacy": 1,
 }
 
+_FAILURE_THRESHOLD = 3
+
 
 @dataclass
 class BreakerState:
@@ -27,10 +29,14 @@ class SessionManager:
     """
 
     def __init__(self, config: ServerConfig) -> None:
-        max_c = config.max_concurrency or _DEFAULT_CONCURRENCY[config.transport]
+        max_c = config.max_concurrency or _DEFAULT_CONCURRENCY.get(config.transport, 1)
         self._sem = asyncio.Semaphore(max_c)
         self._breaker = BreakerState()
         self._closed = False
+
+    @property
+    def breaker_open(self) -> bool:
+        return self._breaker.open
 
     async def execute(
         self,
@@ -44,22 +50,34 @@ class SessionManager:
         if self._breaker.open:
             raise RuntimeError("circuit_open")
 
+        timeout_s = timeout_ms / 1000
         async with self._sem:
             try:
-                return await asyncio.wait_for(call_coro(), timeout=timeout_ms / 1000)
+                result = await asyncio.wait_for(call_coro(), timeout=timeout_s)
             except TimeoutError:
-                self._breaker.failures += 1
+                self._record_failure()
                 raise
             except RuntimeError as exc:
                 if allow_retry and self._is_retryable(exc):
-                    return await asyncio.wait_for(call_coro(), timeout=timeout_ms / 1000)
-                self._breaker.failures += 1
-                if self._breaker.failures >= 3:
-                    self._breaker.open = True
+                    try:
+                        result = await asyncio.wait_for(call_coro(), timeout=timeout_s)
+                    except Exception:
+                        self._record_failure()
+                        raise
+                    self._breaker.failures = 0
+                    return result
+                self._record_failure()
                 raise
+            self._breaker.failures = 0
+            return result
 
     async def close(self) -> None:
         self._closed = True
+
+    def _record_failure(self) -> None:
+        self._breaker.failures += 1
+        if self._breaker.failures >= _FAILURE_THRESHOLD:
+            self._breaker.open = True
 
     @staticmethod
     def _is_retryable(exc: RuntimeError) -> bool:
