@@ -24,6 +24,10 @@ _RRF_K = 60
 _SEMANTIC_RERANK_LIMIT = 12
 _SEMANTIC_FALLBACK_THRESHOLD = 0.15
 _LEADER_CLUSTER_THRESHOLD = 0.35
+_NAME_TERM_WEIGHT = 3
+_SCHEMA_PROPERTY_WEIGHT = 2
+_REQUIRED_FIELD_WEIGHT = 2
+_TRIGRAM_SIZE = 3
 _TRIGRAM_WEIGHT = 0.35
 _CLUSTER_STOPWORDS = frozenset(
     {
@@ -353,7 +357,7 @@ def _build_document_terms(name: str, description: str, schema: dict[str, Any]) -
     name_terms = _tokenize_identifier(name)
     description_terms = _tokenize_text(description)
     schema_terms = _schema_terms(schema)
-    return [*name_terms, *name_terms, *name_terms, *description_terms, *schema_terms]
+    return [*(name_terms * _NAME_TERM_WEIGHT), *description_terms, *schema_terms]
 
 
 def _schema_terms(schema: Any) -> list[str]:
@@ -365,8 +369,7 @@ def _schema_terms(schema: Any) -> list[str]:
     if isinstance(properties, dict):
         for prop_name, prop_schema in properties.items():
             prop_terms = _tokenize_identifier(prop_name)
-            tokens.extend(prop_terms)
-            tokens.extend(prop_terms)
+            tokens.extend(prop_terms * _SCHEMA_PROPERTY_WEIGHT)
             tokens.extend(_schema_terms(prop_schema))
 
     required = schema.get("required")
@@ -374,8 +377,7 @@ def _schema_terms(schema: Any) -> list[str]:
         for item in required:
             if isinstance(item, str):
                 required_terms = _tokenize_identifier(item)
-                tokens.extend(required_terms)
-                tokens.extend(required_terms)
+                tokens.extend(required_terms * _REQUIRED_FIELD_WEIGHT)
 
     items = schema.get("items")
     if isinstance(items, dict):
@@ -422,11 +424,11 @@ def _build_semantic_vector(tokens: tuple[str, ...] | list[str]) -> dict[str, flo
         if not token:
             continue
         features[f"tok:{token}"] += 1.0
-        if len(token) < 3:
+        if len(token) < _TRIGRAM_SIZE:
             continue
         padded = f"^{token}$"
-        for idx in range(len(padded) - 2):
-            features[f"tri:{padded[idx : idx + 3]}"] += _TRIGRAM_WEIGHT
+        for idx in range(len(padded) - (_TRIGRAM_SIZE - 1)):
+            features[f"tri:{padded[idx : idx + _TRIGRAM_SIZE]}"] += _TRIGRAM_WEIGHT
     norm = math.sqrt(sum(weight * weight for weight in features.values()))
     if norm == 0.0:
         return {}
