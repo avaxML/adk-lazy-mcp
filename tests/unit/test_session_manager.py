@@ -65,9 +65,7 @@ class TestExecute:
         with pytest.raises(RuntimeError, match="circuit_open"):
             await sm.execute(_ok, timeout_ms=500, allow_retry=False)
 
-    async def test_breaker_recovers_after_cooldown(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    async def test_breaker_recovers_after_cooldown(self, monkeypatch: pytest.MonkeyPatch) -> None:
         now = 100.0
         monkeypatch.setattr("adk_lazy_mcp.session_manager.time.monotonic", lambda: now)
         sm = SessionManager(ServerConfig(name="fs"))
