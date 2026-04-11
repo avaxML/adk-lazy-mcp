@@ -43,7 +43,7 @@ async def _build_extended_toolset(
     list_tools, execute_tool = callbacks
     return LazyMCPToolset(
         _EXTENDED_SERVER_CONFIGS,
-        RegistryConfig(warm_mode=warm_mode, max_discover_results=100),  # type: ignore[arg-type]
+        RegistryConfig(warm_mode=warm_mode, max_discover_results=100),
         list_tools=list_tools,
         execute_tool=execute_tool,
     )
@@ -58,7 +58,7 @@ def _server_names(discover_result: dict[str, Any]) -> set[str]:
 
 
 def _families(discover_result: dict[str, Any]) -> dict[str, str]:
-    return {t["tool"]: t.get("family", t["tool"]) for t in discover_result["tools"]}
+    return {t["tool"]: t["family"] for t in discover_result["tools"]}
 
 
 # ---------------------------------------------------------------------------
