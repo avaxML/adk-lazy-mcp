@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from adk_lazy_mcp.config import RegistryConfig, ServerConfig, resolve_env_vars
+from adk_lazy_mcp.config import RegistryConfig, RetrievalConfig, ServerConfig, resolve_env_vars
 
 
 class TestServerConfig:
@@ -72,11 +72,41 @@ class TestRegistryConfig:
         assert cfg.max_discover_results == 20
         assert cfg.hard_discover_cap == 100
         assert cfg.enable_client_validation is True
+        assert cfg.retrieval == RetrievalConfig()
 
     def test_is_frozen(self) -> None:
         cfg = RegistryConfig()
         with pytest.raises((AttributeError, ValidationError, TypeError)):
             cfg.warm_mode = "eager"  # type: ignore[misc]
+
+    def test_reads_values_from_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("ADK_LAZY_MCP_WARM_MODE", "eager")
+        monkeypatch.setenv("ADK_LAZY_MCP_MAX_DISCOVER_RESULTS", "42")
+        monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_RERANK_LIMIT", "5")
+        monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_NAME_FALLBACK_THRESHOLD", "0.8")
+        monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__CLUSTER_STOPWORDS", '["Read", "File", "Tool"]')
+
+        cfg = RegistryConfig()
+
+        assert cfg.warm_mode == "eager"
+        assert cfg.max_discover_results == 42
+        assert cfg.retrieval.semantic_rerank_limit == 5
+        assert cfg.retrieval.semantic_name_fallback_threshold == 0.8
+        assert cfg.retrieval.cluster_stopwords == ("read", "file", "tool")
+
+    def test_constructor_values_override_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__BM25_K1", "2.1")
+
+        cfg = RegistryConfig(retrieval=RetrievalConfig(bm25_k1=1.4))
+
+        assert cfg.retrieval.bm25_k1 == 1.4
+
+
+class TestRetrievalConfig:
+    @pytest.mark.parametrize("threshold", [-0.1, 1.5])
+    def test_invalid_threshold_is_rejected(self, threshold: float) -> None:
+        with pytest.raises((ValidationError, ValueError), match="semantic_fallback_threshold"):
+            RetrievalConfig(semantic_fallback_threshold=threshold)
 
 
 class TestResolveEnvVars:
