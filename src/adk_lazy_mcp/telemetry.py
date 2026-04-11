@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict
+from collections.abc import Callable
 
 
 class Telemetry:
@@ -17,7 +18,7 @@ class Telemetry:
     def time_ms(self, name: str, duration_ms: float) -> None:
         self.timings_ms[name].append(duration_ms)
 
-    def timer(self, name: str):
+    def timer(self, name: str) -> Callable[[], None]:
         start = time.perf_counter()
 
         def _finish() -> None:

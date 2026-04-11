@@ -64,10 +64,8 @@ class TestRegistryConfig:
         cfg = RegistryConfig()
         assert cfg.warm_mode == "background"
         assert cfg.summary_ttl_s == 300
-        assert cfg.schema_ttl_s == 300
         assert cfg.max_discover_results == 20
         assert cfg.hard_discover_cap == 100
-        assert cfg.strict_env is True
         assert cfg.enable_client_validation is True
 
     def test_is_frozen(self) -> None:

@@ -181,6 +181,26 @@ class TestWarmModes:
         await reg.discover(server="filesystem")
         assert calls == ["filesystem"]
 
+    async def test_on_demand_discover_without_server_hydrates_all_servers(self) -> None:
+        calls: list[str] = []
+
+        async def list_tools(server: str) -> list[dict[str, Any]]:
+            calls.append(server)
+            return [READ_TOOL]
+
+        reg = Registry(
+            [ServerConfig(name="filesystem"), ServerConfig(name="search")],
+            RegistryConfig(warm_mode="on_demand"),
+            list_tools=list_tools,
+            execute_tool=_null_executor,
+        )
+        await reg.start()
+
+        result = await reg.discover()
+        assert result["total_matches"] == 2
+        assert result["unavailable_servers"] == []
+        assert calls == ["filesystem", "search"]
+
     async def test_background_hydrates_eventually(self) -> None:
         reg = _make_registry(warm_mode="background")
         await reg.start()

@@ -65,6 +65,29 @@ class TestExecute:
         with pytest.raises(RuntimeError, match="circuit_open"):
             await sm.execute(_ok, timeout_ms=500, allow_retry=False)
 
+    async def test_breaker_recovers_after_cooldown(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        now = 100.0
+        monkeypatch.setattr("adk_lazy_mcp.session_manager.time.monotonic", lambda: now)
+        sm = SessionManager(ServerConfig(name="fs"))
+
+        async def _boom() -> None:
+            raise RuntimeError("explode")
+
+        for _ in range(3):
+            with pytest.raises(RuntimeError, match="explode"):
+                await sm.execute(_boom, timeout_ms=500, allow_retry=False)
+
+        with pytest.raises(RuntimeError, match="circuit_open"):
+            await sm.execute(_ok, timeout_ms=500, allow_retry=False)
+
+        now += 30.0
+        result = await sm.execute(_ok, timeout_ms=500, allow_retry=False)
+        assert result == {"ok": True}
+        assert sm.breaker_open is False
+        assert sm._breaker.failures == 0  # type: ignore[attr-defined]
+
     async def test_allow_retry_succeeds_on_second_attempt(self) -> None:
         sm = SessionManager(ServerConfig(name="fs"))
         calls = {"n": 0}

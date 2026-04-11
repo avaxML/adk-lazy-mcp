@@ -64,7 +64,6 @@ jobs:
     # Only run on pushes to main and only if the SMITHERY_API_KEY secret exists.
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [lint, test]
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
