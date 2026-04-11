@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import os
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Literal, Mapping
+from typing import Literal
 
 _ENV_RE = re.compile(r"\$\{([A-Z0-9_]+)(?::-([^}]*))?\}")
 
@@ -43,11 +44,8 @@ class ServerConfig:
 class RegistryConfig:
     warm_mode: Literal["background", "eager", "on_demand"] = "background"
     summary_ttl_s: int = 300
-    schema_ttl_s: int = 300
-    schema_cache_mode: Literal["retain", "summary_only"] = "retain"
     max_discover_results: int = 20
     hard_discover_cap: int = 100
-    strict_env: bool = True
     enable_client_validation: bool = True
 
 
