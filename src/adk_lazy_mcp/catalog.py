@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import difflib
 import hashlib
 import json
 import math
@@ -23,6 +24,7 @@ _BM25_B = 0.75
 _RRF_K = 60
 _SEMANTIC_RERANK_LIMIT = 12
 _SEMANTIC_FALLBACK_THRESHOLD = 0.15
+_SEMANTIC_NAME_FALLBACK_THRESHOLD = 0.72
 _LEADER_CLUSTER_THRESHOLD = 0.35
 _MIN_CLUSTER_TOKEN_LENGTH = 3
 _NAME_TERM_WEIGHT = 3
@@ -237,12 +239,18 @@ class CatalogManager:
     ) -> list[_SearchMatch]:
         semantic_scores = self._semantic_scores(server, entry.tools.keys(), query)
         families = self._tool_families.get(server, {})
+        query_tokens = _extract_alphanumeric_tokens(query)
+        query_compact = "".join(query_tokens)
         matches: list[_SearchMatch] = []
         for rank, (tool_name, score) in enumerate(
             sorted(semantic_scores.items(), key=lambda item: (-item[1], item[0])),
             start=1,
         ):
-            if score < _SEMANTIC_FALLBACK_THRESHOLD:
+            name_similarity = _name_similarity_score(query_compact, tool_name)
+            if (
+                score < _SEMANTIC_FALLBACK_THRESHOLD
+                and name_similarity < _SEMANTIC_NAME_FALLBACK_THRESHOLD
+            ):
                 continue
             matches.append(
                 _SearchMatch(
@@ -424,6 +432,15 @@ def _name_match_boost(query: str, tool: ToolSchema) -> float:
     if query in tool.description_lower:
         return 0.3
     return 0.0
+
+
+def _name_similarity_score(query_compact: str, tool_name: str) -> float:
+    if not query_compact:
+        return 0.0
+    tool_compact = "".join(_tokenize_identifier(tool_name))
+    if not tool_compact:
+        return 0.0
+    return difflib.SequenceMatcher(a=query_compact, b=tool_compact).ratio()
 
 
 def _build_semantic_vector(token_sequence: Iterable[str]) -> dict[str, float]:
