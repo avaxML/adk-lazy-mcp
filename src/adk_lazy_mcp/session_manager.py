@@ -3,8 +3,9 @@ from __future__ import annotations
 import asyncio
 import time
 from collections.abc import Awaitable, Callable
-from dataclasses import dataclass
 from typing import Any
+
+from pydantic import BaseModel
 
 from .config import ServerConfig
 
@@ -18,8 +19,7 @@ _FAILURE_THRESHOLD = 3
 _BREAKER_RESET_TIMEOUT_S = 30.0
 
 
-@dataclass
-class BreakerState:
+class BreakerState(BaseModel):
     failures: int = 0
     open: bool = False
     opened_at: float | None = None

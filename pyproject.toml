@@ -8,7 +8,9 @@ version = "2.0.0"
 description = "Lazy MCP toolset for ADK with bounded discovery and policy-aware execution"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pydantic>=2.0",
+]
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
@@ -60,7 +62,7 @@ select = [
     "PL",   # pylint
 ]
 ignore = [
-    "PLR0913", # too many arguments - our config dataclasses are wide by design
+    "PLR0913", # too many arguments - our config models are wide by design
     "PLR2004", # magic values - tests and defaults use them intentionally
     "PLR0912", # too many branches
     "PLR0915", # too many statements

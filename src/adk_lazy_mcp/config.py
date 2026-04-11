@@ -3,14 +3,16 @@ from __future__ import annotations
 import os
 import re
 from collections.abc import Mapping
-from dataclasses import dataclass
 from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, model_validator
 
 _ENV_RE = re.compile(r"\$\{([A-Z0-9_]+)(?::-([^}]*))?\}")
 
 
-@dataclass(frozen=True)
-class ServerConfig:
+class ServerConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     name: str
     transport: Literal["stdio", "streamable_http", "sse_legacy"] = "stdio"
     command: str | None = None
@@ -27,21 +29,22 @@ class ServerConfig:
     deny_tools: tuple[str, ...] = ()
     max_inline_bytes: int = 16_384
 
-    def __post_init__(self) -> None:
+    @model_validator(mode="after")
+    def _validate(self) -> ServerConfig:
         if not self.name:
             raise ValueError("ServerConfig.name is required")
-        if self.transport not in {"stdio", "streamable_http", "sse_legacy"}:
-            raise ValueError(f"{self.name}: unknown transport {self.transport!r}")
         if self.connect_timeout_ms <= 0 or self.call_timeout_ms <= 0:
             raise ValueError(f"{self.name}: timeouts must be positive")
         if self.max_concurrency is not None and self.max_concurrency < 1:
             raise ValueError(f"{self.name}: max_concurrency must be >= 1")
         if self.max_inline_bytes < 0:
             raise ValueError(f"{self.name}: max_inline_bytes must be non-negative")
+        return self
 
 
-@dataclass(frozen=True)
-class RegistryConfig:
+class RegistryConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     warm_mode: Literal["background", "eager", "on_demand"] = "background"
     summary_ttl_s: int = 300
     max_discover_results: int = 20

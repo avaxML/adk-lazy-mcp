@@ -12,7 +12,7 @@ class TestValidateServer:
     def test_stdio_is_always_allowed(self) -> None:
         engine = PolicyEngine(strict_https=True, allowed_hosts={"nothing"})
         cfg = ServerConfig(name="fs", transport="stdio", command="mcp-fs")
-        assert engine.validate_server(cfg) == PolicyDecision(True)
+        assert engine.validate_server(cfg) == PolicyDecision(allowed=True)
 
     def test_http_requires_https_when_strict(self) -> None:
         engine = PolicyEngine(strict_https=True)
