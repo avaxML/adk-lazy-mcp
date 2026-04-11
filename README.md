@@ -63,6 +63,10 @@ The model only ever sees:
 
 ---
 
+## Requirements
+
+Python **3.11** or newer is required.
+
 ## Install
 
 ```bash
@@ -162,7 +166,7 @@ system_instruction = LazyMCPToolset.default_instruction()
 
 ## What can be configured
 
-## 1) `ServerConfig` (per MCP server)
+### 1) `ServerConfig` (per MCP server)
 
 - `name`: logical server name used by the toolset.
 - `transport`: `stdio` | `streamable_http` | `sse_legacy`.
@@ -176,7 +180,7 @@ system_instruction = LazyMCPToolset.default_instruction()
 - `deny_tools`: denylist (always blocked).
 - `max_inline_bytes`: truncate oversized text payloads in normalized result.
 
-## 2) `RegistryConfig` (global behavior)
+### 2) `RegistryConfig` (global behavior)
 
 - `warm_mode`: `background` | `eager` | `on_demand`.
 - `summary_ttl_s`: tool-catalog freshness window.
@@ -184,7 +188,30 @@ system_instruction = LazyMCPToolset.default_instruction()
 - `hard_discover_cap`: hard cap safety ceiling.
 - `enable_client_validation`: schema-check arguments before remote call.
 
-## 3) Policy engine
+`RegistryConfig()` reads environment variables via Pydantic Settings with the `ADK_LAZY_MCP_` prefix. Existing explicit constructor arguments still work and override environment values.
+
+Examples:
+
+```bash
+export ADK_LAZY_MCP_WARM_MODE=on_demand
+export ADK_LAZY_MCP_MAX_DISCOVER_RESULTS=50
+export ADK_LAZY_MCP_RETRIEVAL__BM25_K1=1.8
+export ADK_LAZY_MCP_RETRIEVAL__BM25_B=0.7
+export ADK_LAZY_MCP_RETRIEVAL__RECIPROCAL_RANK_K=40
+export ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_RERANK_LIMIT=8
+export ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_FALLBACK_THRESHOLD=0.2
+export ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_NAME_FALLBACK_THRESHOLD=0.8
+export ADK_LAZY_MCP_RETRIEVAL__LEADER_CLUSTER_THRESHOLD=0.4
+export ADK_LAZY_MCP_RETRIEVAL__MIN_CLUSTER_TOKEN_LENGTH=4
+export ADK_LAZY_MCP_RETRIEVAL__NAME_TERM_WEIGHT=4
+export ADK_LAZY_MCP_RETRIEVAL__SCHEMA_PROPERTY_WEIGHT=3
+export ADK_LAZY_MCP_RETRIEVAL__REQUIRED_FIELD_WEIGHT=3
+export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_SIZE=4
+export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_WEIGHT=0.25
+export ADK_LAZY_MCP_RETRIEVAL__CLUSTER_STOPWORDS='["and","for","file","tool"]'
+```
+
+### 3) Policy engine
 
 You can pass a custom `PolicyEngine` to enforce:
 
@@ -192,11 +219,11 @@ You can pass a custom `PolicyEngine` to enforce:
 - host allowlist checks.
 - tool allow/deny decisions.
 
-## 4) Telemetry sink
+### 4) Telemetry sink
 
 You can pass `Telemetry` (or your own compatible sink) to track counters and execution timings.
 
-## 5) Environment variable interpolation helper
+### 5) Environment variable interpolation helper
 
 `resolve_env_vars` resolves strings like `${API_KEY}` or `${API_KEY:-fallback}` when building server configs from env-driven templates.
 
@@ -204,13 +231,20 @@ You can pass `Telemetry` (or your own compatible sink) to track counters and exe
 
 ## Result envelope shape (execute)
 
-`execute_mcp_tool` returns normalized output:
+`execute_mcp_tool` returns a dict with these top-level keys:
 
-- `is_error`
-- `content` (typed content items)
-- `structured_data`
-- `artifact_refs` (for image/audio or offloaded payloads)
-- `truncated` (whether text was byte-truncated)
+- `status`: `"success"` (or an error code on failure)
+- `server`: server name
+- `tool`: tool name
+- `duration_ms`: execution time in milliseconds
+- `tool_result`: normalized result envelope containing:
+  - `is_error`
+  - `content` (typed content items)
+  - `structured_data`
+  - `artifact_refs` (for image/audio or offloaded payloads)
+  - `truncated` (whether text was byte-truncated)
+
+On failure, the top-level `status` field is set to an error code (`validation_error`, `policy_denied`, `tool_not_found`, or `execution_error`) and `tool_result` is omitted.
 
 This keeps downstream ADK agent logic predictable across heterogeneous MCP servers.
 
@@ -219,16 +253,22 @@ This keeps downstream ADK agent logic predictable across heterogeneous MCP serve
 ## Development and checks
 
 ```bash
-ruff check .
-ruff format --check .
-pytest
+ruff check .             # lint
+ruff format --check .    # formatting check
+pytest                   # unit tests (default, skips integration)
 pytest --cov=adk_lazy_mcp --cov-report=term-missing
 ```
 
 ### Integration tests (Smithery)
 
+The `tests/integration/` suite exercises `LazyMCPToolset` against real
+Smithery-hosted MCP servers and prints an efficiency report comparing the
+three meta-tool surface to the naive "dump every MCP tool" approach. It is
+gated on a `SMITHERY_API_KEY` environment variable and the `integration` extra:
+
 ```bash
-export SMITHERY_API_KEY=...
+pip install -e .[dev,integration]
+export SMITHERY_API_KEY=...       # from https://smithery.ai/account/api-keys
 pytest -m integration -s tests/integration/
 ```
 
@@ -245,4 +285,3 @@ A new engineer only needs to learn one repeatable pattern:
 3. Execute
 
 They do **not** need to manually wire every MCP tool into ADK prompts, and they get policy + validation + normalized results by default.
-
