@@ -61,10 +61,11 @@ jobs:
   integration:
     name: Integration (Smithery MCPs)
     runs-on: ubuntu-latest
-    # Only run on pushes to main; the secret check below skips cleanly if the
-    # repository secret is not configured for that branch.
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [lint, test]
+    # Network-dependent, non-blocking: a Smithery outage or missing secret
+    # must never fail a PR. The step-level ``if`` below skips the actual run
+    # cleanly when SMITHERY_API_KEY is not available (e.g. PRs from forks).
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
