@@ -73,6 +73,7 @@ class RetrievalConfig(BaseModel):
     reciprocal_rank_k: int = 60
     semantic_rerank_limit: int = 12
     semantic_fallback_threshold: float = 0.15
+    semantic_name_fallback_threshold: float = 0.72
     leader_cluster_threshold: float = 0.35
     min_cluster_token_length: int = 3
     name_term_weight: int = 3
@@ -114,6 +115,8 @@ class RetrievalConfig(BaseModel):
             raise ValueError("semantic_rerank_limit must be >= 1")
         if not 0 <= self.semantic_fallback_threshold <= 1:
             raise ValueError("semantic_fallback_threshold must be between 0 and 1")
+        if not 0 <= self.semantic_name_fallback_threshold <= 1:
+            raise ValueError("semantic_name_fallback_threshold must be between 0 and 1")
         if not 0 <= self.leader_cluster_threshold <= 1:
             raise ValueError("leader_cluster_threshold must be between 0 and 1")
         if self.min_cluster_token_length < 1:

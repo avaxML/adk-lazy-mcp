@@ -83,6 +83,7 @@ class TestRegistryConfig:
         monkeypatch.setenv("ADK_LAZY_MCP_WARM_MODE", "eager")
         monkeypatch.setenv("ADK_LAZY_MCP_MAX_DISCOVER_RESULTS", "42")
         monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_RERANK_LIMIT", "5")
+        monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_NAME_FALLBACK_THRESHOLD", "0.8")
         monkeypatch.setenv("ADK_LAZY_MCP_RETRIEVAL__CLUSTER_STOPWORDS", '["Read", "File", "Tool"]')
 
         cfg = RegistryConfig()
@@ -90,6 +91,7 @@ class TestRegistryConfig:
         assert cfg.warm_mode == "eager"
         assert cfg.max_discover_results == 42
         assert cfg.retrieval.semantic_rerank_limit == 5
+        assert cfg.retrieval.semantic_name_fallback_threshold == 0.8
         assert cfg.retrieval.cluster_stopwords == ("read", "file", "tool")
 
     def test_constructor_values_override_env(self, monkeypatch: pytest.MonkeyPatch) -> None:

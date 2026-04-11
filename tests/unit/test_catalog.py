@@ -234,7 +234,10 @@ class TestCatalogManager:
         manager = CatalogManager(
             RegistryConfig(
                 summary_ttl_s=300,
-                retrieval=RetrievalConfig(semantic_fallback_threshold=0.3),
+                retrieval=RetrievalConfig(
+                    semantic_fallback_threshold=0.3,
+                    semantic_name_fallback_threshold=1.0,
+                ),
             )
         )
         manager.register_server(ServerConfig(name="filesystem"))
