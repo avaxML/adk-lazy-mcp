@@ -7,7 +7,7 @@ import math
 import re
 import time
 from collections import Counter
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -24,6 +24,7 @@ _RRF_K = 60
 _SEMANTIC_RERANK_LIMIT = 12
 _SEMANTIC_FALLBACK_THRESHOLD = 0.15
 _LEADER_CLUSTER_THRESHOLD = 0.35
+_TRIGRAM_WEIGHT = 0.35
 _CLUSTER_STOPWORDS = frozenset(
     {
         "and",
@@ -245,7 +246,7 @@ class CatalogManager:
     def _semantic_scores(
         self,
         server: str,
-        tool_names: Iterator[str] | list[str] | dict[str, ToolSchema].keys,
+        tool_names: Iterable[str],
         query: str,
     ) -> dict[str, float]:
         query_vector = _build_semantic_vector(_tokenize_text(query))
@@ -425,7 +426,7 @@ def _build_semantic_vector(tokens: tuple[str, ...] | list[str]) -> dict[str, flo
             continue
         padded = f"^{token}$"
         for idx in range(len(padded) - 2):
-            features[f"tri:{padded[idx : idx + 3]}"] += 0.35
+            features[f"tri:{padded[idx : idx + 3]}"] += _TRIGRAM_WEIGHT
     norm = math.sqrt(sum(weight * weight for weight in features.values()))
     if norm == 0.0:
         return {}
