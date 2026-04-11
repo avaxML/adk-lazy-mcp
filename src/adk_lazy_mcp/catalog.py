@@ -3,9 +3,10 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Iterator
+from typing import Any
 
 from .config import RegistryConfig, ServerConfig
 
@@ -33,7 +34,9 @@ class ToolSchema:
         if not self.schema_hash:
             self.schema_hash = (
                 "sha256:"
-                + hashlib.sha256(repr(sorted(self.input_schema.items())).encode("utf-8")).hexdigest()
+                + hashlib.sha256(
+                    repr(sorted(self.input_schema.items())).encode("utf-8")
+                ).hexdigest()
             )
         self.name_lower = self.name.lower()
         self.description_lower = self.description.lower()

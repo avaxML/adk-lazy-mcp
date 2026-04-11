@@ -3,7 +3,8 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import time
-from typing import Any, Awaitable, Callable
+from collections.abc import Awaitable, Callable
+from typing import Any
 
 from .catalog import CatalogEntry, CatalogManager, ServerState, ToolSchema
 from .config import RegistryConfig, ServerConfig
@@ -78,7 +79,7 @@ class Registry:
                 tools = await self._list_tools(name)
                 await self._catalog.hydrate_server(name, tools)
                 self._telemetry.incr(f"catalog_refresh_total:{name}:success")
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 self._catalog.mark_error(name, str(exc))
                 self._telemetry.incr(f"catalog_refresh_total:{name}:error")
 
@@ -226,9 +227,7 @@ class Registry:
             "required_fields": list(ts.input_schema.get("required", [])),
             "accepts_no_args": not bool(ts.input_schema.get("required")),
             "schema_hash": ts.schema_hash,
-            "refreshed_at": time.strftime(
-                "%Y-%m-%dT%H:%M:%SZ", time.gmtime(entry.refreshed_at)
-            ),
+            "refreshed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(entry.refreshed_at)),
             "hint": "Call execute_mcp_tool with an arguments object that matches this schema exactly.",
         }
 

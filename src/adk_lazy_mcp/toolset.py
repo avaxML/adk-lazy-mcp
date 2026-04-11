@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Awaitable, Callable
+from collections.abc import Awaitable, Callable
+from typing import Any
 
 from .config import RegistryConfig, ServerConfig
 from .errors import LazyMCPError, PolicyDeniedError, ToolNotFoundError, ValidationError
@@ -170,7 +171,7 @@ class LazyMCPToolset:
             return self._error("policy_denied", str(exc), False, server=server, tool=tool)
         except ToolNotFoundError as exc:
             return self._error("tool_not_found", str(exc), True, server=server, tool=tool)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             return self._error("execution_error", str(exc), True, server=server, tool=tool)
 
     def health_snapshot(self) -> dict[str, Any]:
@@ -180,7 +181,7 @@ class LazyMCPToolset:
     async def close(self) -> None:
         await self._registry.close()
 
-    async def __aenter__(self) -> "LazyMCPToolset":
+    async def __aenter__(self) -> LazyMCPToolset:
         await self.get_tools()
         return self
 

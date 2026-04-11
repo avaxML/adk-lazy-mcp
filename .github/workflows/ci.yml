@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+      - name: Ruff check
+        run: ruff check .
+      - name: Ruff format check
+        run: ruff format --check .
+
+  test:
+    name: Tests (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+      - name: Run unit tests with coverage
+        run: |
+          pytest -m "not integration" \
+            --cov=adk_lazy_mcp \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-fail-under=85
+
+  integration:
+    name: Integration (Smithery MCPs)
+    runs-on: ubuntu-latest
+    # Only run on pushes to main and only if the SMITHERY_API_KEY secret exists.
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    needs: [lint, test]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Check for SMITHERY_API_KEY secret
+        id: secret
+        env:
+          SMITHERY_API_KEY: ${{ secrets.SMITHERY_API_KEY }}
+        run: |
+          if [ -n "$SMITHERY_API_KEY" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SMITHERY_API_KEY secret is not configured - integration tests skipped"
+          fi
+      - name: Install integration dependencies
+        if: steps.secret.outputs.present == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev,integration]
+      - name: Run integration + efficiency benchmark
+        if: steps.secret.outputs.present == 'true'
+        env:
+          SMITHERY_API_KEY: ${{ secrets.SMITHERY_API_KEY }}
+        run: pytest -m integration -s tests/integration/
