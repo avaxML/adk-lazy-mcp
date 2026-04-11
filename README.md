@@ -55,6 +55,15 @@ python benchmarks/scripts/run_benchmark.py         # tokens + latency plots
 python benchmarks/scripts/tune_discovery.py        # accuracy + parameter tuning
 ```
 
+For end-to-end validation against a live model instead of the
+`tokens / throughput` heuristic, `benchmarks/scripts/run_real_benchmark.py`
+drives the same naive-vs-lazy comparison through `google-genai` — one call
+per naive turn, three calls (`discover → inspect → execute`) per lazy turn
+— and records API-reported prompt tokens + wall-clock. It needs
+`GOOGLE_API_KEY` and `pip install google-genai`; see
+[`benchmarks/README.md`](./benchmarks/README.md#real-world-gemini-benchmark-optional)
+for the full invocation.
+
 ### 1. Model-facing tokens stay flat as the MCP pool grows
 
 ![Tokens vs MCP pool size](./benchmarks/plots/tokens.png)
