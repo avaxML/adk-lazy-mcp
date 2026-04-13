@@ -5,6 +5,7 @@ import os
 import re
 from collections.abc import Mapping
 from typing import Literal
+from urllib.parse import urlparse
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -54,14 +55,20 @@ class ServerConfig(BaseModel):
 
     @model_validator(mode="after")
     def _validate(self) -> ServerConfig:
-        if not self.name:
-            raise ValueError("ServerConfig.name is required")
+        if not self.name.strip():
+            raise ValueError("ServerConfig.name must not be blank")
         if self.connect_timeout_ms <= 0 or self.call_timeout_ms <= 0:
             raise ValueError(f"{self.name}: timeouts must be positive")
         if self.max_concurrency is not None and self.max_concurrency < 1:
             raise ValueError(f"{self.name}: max_concurrency must be >= 1")
         if self.max_inline_bytes < 0:
             raise ValueError(f"{self.name}: max_inline_bytes must be non-negative")
+        if self.command is not None and not self.command.strip():
+            raise ValueError(f"{self.name}: command must not be blank")
+        if self.transport in {"streamable_http", "sse_legacy"} and self.url is not None:
+            parsed = urlparse(self.url)
+            if not parsed.scheme or not parsed.netloc:
+                raise ValueError(f"{self.name}: url must include a scheme and host")
         return self
 
 
@@ -148,6 +155,16 @@ class RegistryConfig(BaseSettings):
     hard_discover_cap: int = 100
     enable_client_validation: bool = True
     retrieval: RetrievalConfig = Field(default_factory=RetrievalConfig)
+
+    @model_validator(mode="after")
+    def _validate(self) -> RegistryConfig:
+        if self.summary_ttl_s <= 0:
+            raise ValueError("summary_ttl_s must be positive")
+        if self.max_discover_results < 1:
+            raise ValueError("max_discover_results must be >= 1")
+        if self.hard_discover_cap < 1:
+            raise ValueError("hard_discover_cap must be >= 1")
+        return self
 
 
 def resolve_env_vars(value: str, *, strict: bool = True) -> str:

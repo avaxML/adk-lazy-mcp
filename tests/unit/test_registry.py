@@ -141,7 +141,7 @@ def _make_registry(
         }
 
     return Registry(
-        servers or [ServerConfig(name="filesystem")],
+        servers or [ServerConfig(name="filesystem", command="mcp-filesystem")],
         RegistryConfig(
             warm_mode=warm_mode,  # type: ignore[arg-type]
             enable_client_validation=enable_client_validation,
@@ -170,7 +170,7 @@ class TestWarmModes:
             return [READ_TOOL]
 
         reg = Registry(
-            [ServerConfig(name="filesystem")],
+            [ServerConfig(name="filesystem", command="mcp-filesystem")],
             RegistryConfig(warm_mode="on_demand"),
             list_tools=list_tools,
             execute_tool=_null_executor,
@@ -189,7 +189,10 @@ class TestWarmModes:
             return [READ_TOOL]
 
         reg = Registry(
-            [ServerConfig(name="filesystem"), ServerConfig(name="search")],
+            [
+                ServerConfig(name="filesystem", command="mcp-filesystem"),
+                ServerConfig(name="search", command="mcp-search"),
+            ],
             RegistryConfig(warm_mode="on_demand"),
             list_tools=list_tools,
             execute_tool=_null_executor,
@@ -317,7 +320,13 @@ class TestExecute:
 
     async def test_denylisted_tool_raises_policy_denied(self) -> None:
         reg = _make_registry(
-            servers=[ServerConfig(name="filesystem", deny_tools=("write_file",))],
+            servers=[
+                ServerConfig(
+                    name="filesystem",
+                    command="mcp-filesystem",
+                    deny_tools=("write_file",),
+                )
+            ],
         )
         await reg.start()
         with pytest.raises(PolicyDeniedError):
@@ -334,6 +343,26 @@ class TestExecute:
         await reg.start()
         with pytest.raises(ToolNotFoundError, match="Unknown tool"):
             await reg.execute("filesystem", "no_such_tool", {"path": "/a"})
+
+    async def test_non_positive_timeout_override_raises_validation_error(self) -> None:
+        reg = _make_registry()
+        await reg.start()
+        with pytest.raises(ValidationError, match="timeout_ms must be positive"):
+            await reg.execute("filesystem", "read_file", {"path": "/a"}, timeout_ms=0)
+
+    async def test_non_mapping_execute_result_raises_type_error(self) -> None:
+        async def bad_execute(server: str, tool: str, arguments: dict[str, Any]) -> dict[str, Any]:
+            return "bad-result"  # type: ignore[return-value]
+
+        reg = Registry(
+            [ServerConfig(name="filesystem", command="mcp-filesystem")],
+            RegistryConfig(warm_mode="eager"),
+            list_tools=lambda server: asyncio.sleep(0, result=[READ_TOOL]),
+            execute_tool=bad_execute,
+        )
+        await reg.start()
+        with pytest.raises(TypeError, match="dict-like MCP result"):
+            await reg.execute("filesystem", "read_file", {"path": "/a"})
 
 
 class TestClose:
@@ -419,6 +448,20 @@ class TestHealthSnapshot:
         states = {s["name"]: s["state"] for s in snap["servers"]}
         assert states["broken"] == "degraded"
         assert states["filesystem"] == "ready"
+
+
+class TestConstruction:
+    def test_duplicate_server_names_are_rejected(self) -> None:
+        with pytest.raises(ValueError, match="unique server names"):
+            Registry(
+                [
+                    ServerConfig(name="filesystem", command="mcp-fs-a"),
+                    ServerConfig(name="filesystem", command="mcp-fs-b"),
+                ],
+                RegistryConfig(warm_mode="eager"),
+                list_tools=lambda server: asyncio.sleep(0, result=[]),
+                execute_tool=_null_executor,
+            )
 
 
 async def _null_executor(server: str, tool: str, arguments: dict[str, Any]) -> dict[str, Any]:

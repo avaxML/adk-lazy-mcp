@@ -19,8 +19,13 @@ def normalize_result(raw: dict[str, Any], *, max_inline_bytes: int = 16_384) -> 
     content: list[dict[str, Any]] = []
     artifacts: list[dict[str, Any]] = []
     truncated = False
+    raw_content = raw.get("content")
+    items = raw_content if isinstance(raw_content, list) else []
 
-    for item in raw.get("content", []):
+    for item in items:
+        if not isinstance(item, dict):
+            content.append({"type": "unknown", "preview": str(item)[:_PREVIEW_CHARS]})
+            continue
         item_type = item.get("type", "text")
         if item_type == "text":
             text = item.get("text", "")

@@ -39,6 +39,9 @@ class Registry:
         policy: PolicyEngine | None = None,
         telemetry: Telemetry | None = None,
     ) -> None:
+        duplicate_names = [s.name for s in server_configs]
+        if len(duplicate_names) != len(set(duplicate_names)):
+            raise ValueError("server_configs must use unique server names")
         self.cfg = cfg
         self._list_tools = list_tools
         self._execute_tool = execute_tool
@@ -166,15 +169,20 @@ class Registry:
             err = _validate_args(args, ts.input_schema)
             if err:
                 raise ValidationError(err)
+        effective_timeout_ms = cfg.call_timeout_ms if timeout_ms is None else timeout_ms
+        if effective_timeout_ms <= 0:
+            raise ValidationError("timeout_ms must be positive")
 
         session = self._sessions[server]
         started = time.perf_counter()
         try:
             raw = await session.execute(
                 lambda: self._execute_tool(server, tool, args),
-                timeout_ms=timeout_ms or cfg.call_timeout_ms,
+                timeout_ms=effective_timeout_ms,
                 allow_retry=cfg.trusted,
             )
+            if not isinstance(raw, dict):
+                raise TypeError("execute_tool must return a dict-like MCP result")
         finally:
             duration_ms = (time.perf_counter() - started) * 1_000
             self._telemetry.time_ms(f"execute_duration_ms:{server}:{tool}", duration_ms)

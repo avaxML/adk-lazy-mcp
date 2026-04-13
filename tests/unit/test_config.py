@@ -10,7 +10,7 @@ from adk_lazy_mcp.config import RegistryConfig, RetrievalConfig, ServerConfig, r
 
 class TestServerConfig:
     def test_minimal_stdio_config(self) -> None:
-        cfg = ServerConfig(name="filesystem")
+        cfg = ServerConfig(name="filesystem", command="mcp-fs")
         assert cfg.transport == "stdio"
         assert cfg.connect_timeout_ms == 5_000
         assert cfg.call_timeout_ms == 30_000
@@ -18,7 +18,7 @@ class TestServerConfig:
         assert cfg.trusted is False
 
     def test_empty_name_is_rejected(self) -> None:
-        with pytest.raises((ValidationError, ValueError), match="name is required"):
+        with pytest.raises((ValidationError, ValueError), match="must not be blank"):
             ServerConfig(name="")
 
     def test_unknown_transport_is_rejected(self) -> None:
@@ -26,6 +26,14 @@ class TestServerConfig:
             (ValidationError, ValueError), match=r"unknown transport|Input should be"
         ):
             ServerConfig(name="srv", transport="grpc")  # type: ignore[arg-type]
+
+    def test_blank_command_is_rejected(self) -> None:
+        with pytest.raises((ValidationError, ValueError), match="command must not be blank"):
+            ServerConfig(name="srv", command="   ")
+
+    def test_remote_url_must_include_scheme_and_host(self) -> None:
+        with pytest.raises((ValidationError, ValueError), match="scheme and host"):
+            ServerConfig(name="srv", transport="streamable_http", url="example.com")
 
     @pytest.mark.parametrize(
         ("kwargs", "match"),
@@ -45,7 +53,7 @@ class TestServerConfig:
             ServerConfig(name="srv", max_concurrency=0)
 
     def test_concurrency_of_one_is_allowed(self) -> None:
-        cfg = ServerConfig(name="srv", max_concurrency=1)
+        cfg = ServerConfig(name="srv", command="mcp-srv", max_concurrency=1)
         assert cfg.max_concurrency == 1
 
     def test_negative_inline_bytes_is_rejected(self) -> None:
@@ -55,11 +63,11 @@ class TestServerConfig:
             ServerConfig(name="srv", max_inline_bytes=-1)
 
     def test_inline_bytes_of_zero_is_allowed(self) -> None:
-        cfg = ServerConfig(name="srv", max_inline_bytes=0)
+        cfg = ServerConfig(name="srv", command="mcp-srv", max_inline_bytes=0)
         assert cfg.max_inline_bytes == 0
 
     def test_is_frozen(self) -> None:
-        cfg = ServerConfig(name="srv")
+        cfg = ServerConfig(name="srv", command="mcp-srv")
         with pytest.raises((AttributeError, ValidationError, TypeError)):
             cfg.name = "other"  # type: ignore[misc]
 
@@ -100,6 +108,18 @@ class TestRegistryConfig:
         cfg = RegistryConfig(retrieval=RetrievalConfig(bm25_k1=1.4))
 
         assert cfg.retrieval.bm25_k1 == 1.4
+
+    @pytest.mark.parametrize(
+        ("kwargs", "match"),
+        [
+            ({"summary_ttl_s": 0}, "summary_ttl_s must be positive"),
+            ({"max_discover_results": 0}, "max_discover_results must be >= 1"),
+            ({"hard_discover_cap": 0}, "hard_discover_cap must be >= 1"),
+        ],
+    )
+    def test_invalid_limits_are_rejected(self, kwargs: dict[str, int], match: str) -> None:
+        with pytest.raises((ValidationError, ValueError), match=match):
+            RegistryConfig(**kwargs)
 
 
 class TestRetrievalConfig:
