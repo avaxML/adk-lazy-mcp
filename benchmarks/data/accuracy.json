@@ -1,0 +1,2464 @@
+{
+  "baseline": {
+    "mrr_at_10": 0.19626245847176077,
+    "per_query_seconds": 0.012828807953488904,
+    "queries_evaluated": 86,
+    "recall_at_1": 0.10465116279069768,
+    "recall_at_10": 0.46511627906976744,
+    "recall_at_5": 0.313953488372093
+  },
+  "catalog_servers": 60,
+  "generated_at": 1775908099,
+  "grid": [
+    {
+      "metrics": {
+        "mrr_at_10": 0.8565891472868216,
+        "per_query_seconds": 0.013258648720928905,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.641472868217054
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8565891472868216,
+        "per_query_seconds": 0.012610158139533839,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.641472868217054
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8565891472868216,
+        "per_query_seconds": 0.012300630406975658,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.641472868217054
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8565891472868216,
+        "per_query_seconds": 0.012582953546513615,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.641472868217054
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8565891472868216,
+        "per_query_seconds": 0.01531156359302195,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.641472868217054
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8565891472868216,
+        "per_query_seconds": 0.014096619093022634,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.641472868217054
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8563122923588039,
+        "per_query_seconds": 0.012831132604653015,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.641196013289036
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8563122923588039,
+        "per_query_seconds": 0.015379902755813779,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.641196013289036
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8560077519379846,
+        "per_query_seconds": 0.013737271011627642,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.640891472868217
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8560077519379846,
+        "per_query_seconds": 0.01416735243023151,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.640891472868217
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8560077519379846,
+        "per_query_seconds": 0.013550893000001452,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.640891472868217
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8560077519379846,
+        "per_query_seconds": 0.013945652232556567,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7906976744186046,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.640891472868217
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8369509043927649,
+        "per_query_seconds": 0.014653850790697889,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.5346253229974165
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8369509043927649,
+        "per_query_seconds": 0.014707899104651851,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.5346253229974165
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8369509043927649,
+        "per_query_seconds": 0.014746261581395565,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.5346253229974165
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8369509043927649,
+        "per_query_seconds": 0.015427186511628015,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.5346253229974165
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8369509043927649,
+        "per_query_seconds": 0.01541223560465115,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.5346253229974165
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8369509043927649,
+        "per_query_seconds": 0.014450332930233492,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.5346253229974165
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8368217054263566,
+        "per_query_seconds": 0.013822144453488257,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.534496124031008
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8368217054263566,
+        "per_query_seconds": 0.015478577767440098,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.534496124031008
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8356589147286821,
+        "per_query_seconds": 0.012713643348838347,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533333333333333
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8356589147286821,
+        "per_query_seconds": 0.012704125744187158,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533333333333333
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8356589147286821,
+        "per_query_seconds": 0.014545020244184364,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533333333333333
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8356589147286821,
+        "per_query_seconds": 0.015390871337209573,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533333333333333
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8353820598006645,
+        "per_query_seconds": 0.014738445279069607,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533056478405316
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8353820598006645,
+        "per_query_seconds": 0.015263597302326922,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533056478405316
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8353820598006645,
+        "per_query_seconds": 0.015031705348836874,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533056478405316
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8353820598006645,
+        "per_query_seconds": 0.015017096209301726,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533056478405316
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8353820598006645,
+        "per_query_seconds": 0.015465245197674449,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533056478405316
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8353820598006645,
+        "per_query_seconds": 0.015465112511627245,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7674418604651163,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.533056478405316
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8336240310077518,
+        "per_query_seconds": 0.015169675430231934,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.513856589147286
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8336240310077518,
+        "per_query_seconds": 0.013856672279067679,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.513856589147286
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8334625322997415,
+        "per_query_seconds": 0.014786619302325625,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.513695090439276
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8334625322997415,
+        "per_query_seconds": 0.014299905837209165,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.513695090439276
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8334625322997415,
+        "per_query_seconds": 0.013871577034883346,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.513695090439276
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8334625322997415,
+        "per_query_seconds": 0.013630459837211378,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.513695090439276
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8323643410852712,
+        "per_query_seconds": 0.015648706488372396,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.512596899224806
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8323643410852712,
+        "per_query_seconds": 0.01575587097674416,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.512596899224806
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8317829457364341,
+        "per_query_seconds": 0.014596830488374,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.512015503875968
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8317829457364341,
+        "per_query_seconds": 0.014804926593022407,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.512015503875968
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8317829457364341,
+        "per_query_seconds": 0.015343607197675822,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.512015503875968
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8317829457364341,
+        "per_query_seconds": 0.015430834965117313,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.512015503875968
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8317829457364341,
+        "per_query_seconds": 0.015516584034883657,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.512015503875968
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8317829457364341,
+        "per_query_seconds": 0.015302390593023501,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.512015503875968
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8316860465116279,
+        "per_query_seconds": 0.015018386965115772,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.511918604651163
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8316860465116279,
+        "per_query_seconds": 0.014762559523255944,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.511918604651163
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8316860465116279,
+        "per_query_seconds": 0.01480570190697531,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.511918604651163
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8316860465116279,
+        "per_query_seconds": 0.014778592453488506,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.511918604651163
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8316860465116279,
+        "per_query_seconds": 0.015050159034883616,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.511918604651163
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8316860465116279,
+        "per_query_seconds": 0.014707059499999052,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9651162790697675,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.511918604651163
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.830813953488372,
+        "per_query_seconds": 0.014370380767442924,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.511046511627907
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.830813953488372,
+        "per_query_seconds": 0.015166229290698115,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.511046511627907
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.830813953488372,
+        "per_query_seconds": 0.015673617383722662,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.511046511627907
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.830813953488372,
+        "per_query_seconds": 0.015117879511628183,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.511046511627907
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.830232558139535,
+        "per_query_seconds": 0.013538918302325053,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.51046511627907
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.830232558139535,
+        "per_query_seconds": 0.013593775895348572,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.51046511627907
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8298449612403102,
+        "per_query_seconds": 0.01435109294186003,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.492635658914729
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8298449612403102,
+        "per_query_seconds": 0.015078185000000958,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.492635658914729
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8298449612403102,
+        "per_query_seconds": 0.014374765802326798,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.492635658914729
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8298449612403102,
+        "per_query_seconds": 0.015700593523253998,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7558139534883721,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9302325581395349
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.492635658914729
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.015119293581395056,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.015311641395346987,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.014822823534885619,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.014826588639536122,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.015107667441860264,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.015362749523256055,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.013150917860465343,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.014259204930231875,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.01496662073255657,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.014235767627906699,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.012698197918605856,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8218992248062016,
+        "per_query_seconds": 0.014360543360464023,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.4672480620155035
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8174418604651165,
+        "per_query_seconds": 0.015231413744186812,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.462790697674419
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8174418604651165,
+        "per_query_seconds": 0.015295100348836523,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.462790697674419
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8174418604651165,
+        "per_query_seconds": 0.015108100988371452,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.462790697674419
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8174418604651165,
+        "per_query_seconds": 0.01564872032558078,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.462790697674419
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8174418604651165,
+        "per_query_seconds": 0.016145121162790124,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.462790697674419
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8174418604651165,
+        "per_query_seconds": 0.015713005651163743,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.462790697674419
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.819282945736434,
+        "per_query_seconds": 0.015016162058137779,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.429748062015504
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.819282945736434,
+        "per_query_seconds": 0.014965102302325735,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.429748062015504
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.819282945736434,
+        "per_query_seconds": 0.01494728503488458,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 4.429748062015504
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.819282945736434,
+        "per_query_seconds": 0.01526091924418504,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.429748062015504
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.819282945736434,
+        "per_query_seconds": 0.014883140930232172,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.429748062015504
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.819282945736434,
+        "per_query_seconds": 0.015358797825580611,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 4.429748062015504
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8167635658914728,
+        "per_query_seconds": 0.01465375454651177,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.427228682170543
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8167635658914728,
+        "per_query_seconds": 0.013953706534882555,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.427228682170543
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8167635658914728,
+        "per_query_seconds": 0.015186247790697856,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.427228682170543
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8167635658914728,
+        "per_query_seconds": 0.014060270511626461,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.427228682170543
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8167635658914728,
+        "per_query_seconds": 0.01540727970930326,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.427228682170543
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8167635658914728,
+        "per_query_seconds": 0.015116142965116841,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7441860465116279,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9186046511627907
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.427228682170543
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8116279069767444,
+        "per_query_seconds": 0.014890500488371969,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7325581395348837,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4220930232558135
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8116279069767444,
+        "per_query_seconds": 0.014789959476742782,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7325581395348837,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4220930232558135
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8116279069767444,
+        "per_query_seconds": 0.014804421069769423,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7325581395348837,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4220930232558135
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8116279069767444,
+        "per_query_seconds": 0.015366400534884273,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7325581395348837,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.02,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4220930232558135
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8116279069767444,
+        "per_query_seconds": 0.014093321093024885,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7325581395348837,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.05,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4220930232558135
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.8116279069767444,
+        "per_query_seconds": 0.015236994790695969,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.7325581395348837,
+        "recall_at_10": 0.9534883720930233,
+        "recall_at_5": 0.9418604651162791
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.1,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 4.4220930232558135
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2065799187892211,
+        "per_query_seconds": 0.014108975860465783,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0263473606496862
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2065799187892211,
+        "per_query_seconds": 0.013552738627907296,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0263473606496862
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2065799187892211,
+        "per_query_seconds": 0.01544563915116362,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0263473606496862
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2065799187892211,
+        "per_query_seconds": 0.015358947581394522,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0263473606496862
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20587393872277593,
+        "per_query_seconds": 0.014575996220929843,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0256413805832412
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20587393872277593,
+        "per_query_seconds": 0.01506919619767486,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0256413805832412
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20571244001476557,
+        "per_query_seconds": 0.015084190953490539,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0254798818752306
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20571244001476557,
+        "per_query_seconds": 0.01549818417442016,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0254798818752306
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2043512366186785,
+        "per_query_seconds": 0.013619950953487966,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0241186784791436
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2043512366186785,
+        "per_query_seconds": 0.014318914930231057,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0241186784791436
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2043512366186785,
+        "per_query_seconds": 0.014990540732556774,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0241186784791436
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.2043512366186785,
+        "per_query_seconds": 0.015246869093022175,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.47674418604651164,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 1.0241186784791436
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20361295681063124,
+        "per_query_seconds": 0.015201678244185914,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0233803986710963
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20361295681063124,
+        "per_query_seconds": 0.01531705366279195,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0233803986710963
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20361295681063124,
+        "per_query_seconds": 0.014843959999999497,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0233803986710963
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.20361295681063124,
+        "per_query_seconds": 0.015387380174417537,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.11627906976744186,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 1.0233803986710963
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19364617940199336,
+        "per_query_seconds": 0.014819206430235132,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9436461794019934
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.193484680693983,
+        "per_query_seconds": 0.01488307486046546,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 0.943484680693983
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19170819490586932,
+        "per_query_seconds": 0.014500199802325876,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9417081949058693
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19154669619785897,
+        "per_query_seconds": 0.01548713755813836,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9415466961978589
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19138519748984864,
+        "per_query_seconds": 0.013446974930232945,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9413851974898486
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19138519748984864,
+        "per_query_seconds": 0.015447114860466554,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9413851974898486
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19138519748984864,
+        "per_query_seconds": 0.014016969883720967,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9413851974898486
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19056386120339608,
+        "per_query_seconds": 0.01555977586046411,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 0.9405638612033961
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19056386120339608,
+        "per_query_seconds": 0.015719351186045206,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 0.9405638612033961
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19040236249538572,
+        "per_query_seconds": 0.015246358267441517,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 0.9404023624953857
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.19040236249538572,
+        "per_query_seconds": 0.014790099395350956,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 0.9404023624953857
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.18944721299372463,
+        "per_query_seconds": 0.014844133953488381,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.10465116279069768,
+        "recall_at_10": 0.45348837209302323,
+        "recall_at_5": 0.29069767441860467
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 5,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.5
+      },
+      "score": 0.9394472129937246
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.1881736803248431,
+        "per_query_seconds": 0.015390783174417942,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 0.938173680324843
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.1881736803248431,
+        "per_query_seconds": 0.015018585930232442,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.2,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 0.938173680324843
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.1881736803248431,
+        "per_query_seconds": 0.015162606546511576,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 8,
+        "trigram_weight": 0.25
+      },
+      "score": 0.938173680324843
+    },
+    {
+      "metrics": {
+        "mrr_at_10": 0.1881736803248431,
+        "per_query_seconds": 0.015356513779069204,
+        "queries_evaluated": 86,
+        "recall_at_1": 0.09302325581395349,
+        "recall_at_10": 0.46511627906976744,
+        "recall_at_5": 0.313953488372093
+      },
+      "overrides": {
+        "bm25_b": 0.5,
+        "bm25_k1": 1.6,
+        "global_score_weight": 0.0,
+        "name_term_weight": 3,
+        "semantic_rerank_limit": 16,
+        "trigram_weight": 0.25
+      },
+      "score": 0.938173680324843
+    }
+  ],
+  "queries_evaluated": 86,
+  "top_k": 10,
+  "tuned": {
+    "mrr_at_10": 0.8565891472868216,
+    "per_query_seconds": 0.013258648720928905,
+    "queries_evaluated": 86,
+    "recall_at_1": 0.7906976744186046,
+    "recall_at_10": 0.9651162790697675,
+    "recall_at_5": 0.9418604651162791
+  },
+  "tuned_overrides": {
+    "bm25_b": 0.5,
+    "bm25_k1": 1.2,
+    "global_score_weight": 0.02,
+    "name_term_weight": 5,
+    "semantic_rerank_limit": 8,
+    "trigram_weight": 0.25
+  }
+}

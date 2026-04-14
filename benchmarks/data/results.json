@@ -1,0 +1,129 @@
+{
+  "catalog_generated_at": 1775906697,
+  "catalog_server_count": 300,
+  "catalog_source_counts": {
+    "mcpservers.org": 12,
+    "smithery": 300
+  },
+  "catalog_total_tools": 4314,
+  "generated_at": 1775907228,
+  "pool_results": [
+    {
+      "lazy_lib_latency_ms_mean": 12.500164400012181,
+      "lazy_lib_latency_ms_p95": 13.147565000053874,
+      "lazy_tokens": 766,
+      "lazy_total_latency_ms": 50.80016440001218,
+      "naive_lib_latency_ms_mean": 10.684761999982584,
+      "naive_lib_latency_ms_p95": 10.805228999970495,
+      "naive_tokens": 7163,
+      "naive_tool_count": 45,
+      "naive_total_latency_ms": 368.8347619999826,
+      "pool_size": 10,
+      "prompt_cost_lazy_ms": 38.3,
+      "prompt_cost_naive_ms": 358.15000000000003,
+      "prompt_tokens_per_sec": 20000.0,
+      "repeats": 5,
+      "simulated_rtt_ms": 10.0,
+      "sources": {
+        "mcpservers.org": 0,
+        "smithery": 10
+      },
+      "target_server": "sfiorini/youtube-mcp",
+      "target_tool": "videos_getVideo"
+    },
+    {
+      "lazy_lib_latency_ms_mean": 17.31003220004368,
+      "lazy_lib_latency_ms_p95": 17.806324000048335,
+      "lazy_tokens": 766,
+      "lazy_total_latency_ms": 55.610032200043676,
+      "naive_lib_latency_ms_mean": 10.764803600022788,
+      "naive_lib_latency_ms_p95": 11.030039000047509,
+      "naive_tokens": 43256,
+      "naive_tool_count": 214,
+      "naive_total_latency_ms": 2173.5648036000225,
+      "pool_size": 20,
+      "prompt_cost_lazy_ms": 38.3,
+      "prompt_cost_naive_ms": 2162.7999999999997,
+      "prompt_tokens_per_sec": 20000.0,
+      "repeats": 5,
+      "simulated_rtt_ms": 10.0,
+      "sources": {
+        "mcpservers.org": 0,
+        "smithery": 20
+      },
+      "target_server": "sfiorini/youtube-mcp",
+      "target_tool": "videos_getVideo"
+    },
+    {
+      "lazy_lib_latency_ms_mean": 20.13311219998286,
+      "lazy_lib_latency_ms_p95": 21.5739880000001,
+      "lazy_tokens": 766,
+      "lazy_total_latency_ms": 58.43311219998286,
+      "naive_lib_latency_ms_mean": 10.623214199972608,
+      "naive_lib_latency_ms_p95": 10.770761000003404,
+      "naive_tokens": 103294,
+      "naive_tool_count": 428,
+      "naive_total_latency_ms": 5175.323214199972,
+      "pool_size": 40,
+      "prompt_cost_lazy_ms": 38.3,
+      "prompt_cost_naive_ms": 5164.7,
+      "prompt_tokens_per_sec": 20000.0,
+      "repeats": 5,
+      "simulated_rtt_ms": 10.0,
+      "sources": {
+        "mcpservers.org": 1,
+        "smithery": 40
+      },
+      "target_server": "reddit",
+      "target_tool": "REDDIT_CREATE_REDDIT_POST"
+    },
+    {
+      "lazy_lib_latency_ms_mean": 23.189176999994743,
+      "lazy_lib_latency_ms_p95": 24.014744000055543,
+      "lazy_tokens": 766,
+      "lazy_total_latency_ms": 61.48917699999474,
+      "naive_lib_latency_ms_mean": 10.853985800031296,
+      "naive_lib_latency_ms_p95": 11.299263000069004,
+      "naive_tokens": 140371,
+      "naive_tool_count": 538,
+      "naive_total_latency_ms": 7029.4039858000315,
+      "pool_size": 50,
+      "prompt_cost_lazy_ms": 38.3,
+      "prompt_cost_naive_ms": 7018.55,
+      "prompt_tokens_per_sec": 20000.0,
+      "repeats": 5,
+      "simulated_rtt_ms": 10.0,
+      "sources": {
+        "mcpservers.org": 3,
+        "smithery": 50
+      },
+      "target_server": "reddit",
+      "target_tool": "REDDIT_CREATE_REDDIT_POST"
+    },
+    {
+      "lazy_lib_latency_ms_mean": 35.275241599993024,
+      "lazy_lib_latency_ms_p95": 38.21714000002885,
+      "lazy_tokens": 766,
+      "lazy_total_latency_ms": 73.57524159999302,
+      "naive_lib_latency_ms_mean": 10.748529000011331,
+      "naive_lib_latency_ms_p95": 10.89478300002611,
+      "naive_tokens": 311157,
+      "naive_tool_count": 1341,
+      "naive_total_latency_ms": 15568.598529000012,
+      "pool_size": 100,
+      "prompt_cost_lazy_ms": 38.3,
+      "prompt_cost_naive_ms": 15557.85,
+      "prompt_tokens_per_sec": 20000.0,
+      "repeats": 5,
+      "simulated_rtt_ms": 10.0,
+      "sources": {
+        "mcpservers.org": 3,
+        "smithery": 100
+      },
+      "target_server": "reddit",
+      "target_tool": "REDDIT_CREATE_REDDIT_POST"
+    }
+  ],
+  "repeats": 5,
+  "simulated_rtt_ms": 10.0
+}

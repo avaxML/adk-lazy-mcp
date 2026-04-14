@@ -230,6 +230,54 @@ class TestCatalogManager:
             _reciprocal_rank_fusion_score(2, manager._cfg.retrieval),
         ]
 
+    async def test_global_score_weight_breaks_cross_server_rrf_ties(self) -> None:
+        """``global_score_weight`` > 0 must let a strong lexical hit from one
+        server outrank a weak hit from another — otherwise pure per-server RRF
+        ties on every top-1 match and cross-server discovery collapses to
+        alphabetical order (which is what was happening at ~10% recall@1 on
+        the Smithery+mcpservers.org benchmark before this knob was added).
+        """
+        # Baseline: gsw=0.0 reproduces the legacy tie (alphabetical server name
+        # wins) even though ``github/search_pull_requests`` is an obvious hit.
+        baseline_mgr = CatalogManager(
+            RegistryConfig(retrieval=RetrievalConfig(global_score_weight=0.0))
+        )
+        baseline_mgr.register_server(ServerConfig(name="alpha_server"))
+        baseline_mgr.register_server(ServerConfig(name="github"))
+        await baseline_mgr.hydrate_server(
+            "alpha_server",
+            [_tool("lookup_value", "Lookup a value by search key")],
+        )
+        await baseline_mgr.hydrate_server(
+            "github",
+            [_tool("search_pull_requests", "Search for pull requests on GitHub")],
+        )
+        baseline = baseline_mgr.discover("search pull requests github")
+        assert baseline, "baseline discover returned nothing"
+        # With gsw=0 every per-server top match scores identically and ties
+        # sort alphabetically, so ``alpha_server`` must win.
+        assert baseline[0]["server"] == "alpha_server"
+
+        # Tuned: a small ``global_score_weight`` adds a fraction of the raw
+        # lexical score to the fused score, letting the stronger match win.
+        tuned_mgr = CatalogManager(
+            RegistryConfig(retrieval=RetrievalConfig(global_score_weight=0.05))
+        )
+        tuned_mgr.register_server(ServerConfig(name="alpha_server"))
+        tuned_mgr.register_server(ServerConfig(name="github"))
+        await tuned_mgr.hydrate_server(
+            "alpha_server",
+            [_tool("lookup_value", "Lookup a value by search key")],
+        )
+        await tuned_mgr.hydrate_server(
+            "github",
+            [_tool("search_pull_requests", "Search for pull requests on GitHub")],
+        )
+        tuned = tuned_mgr.discover("search pull requests github")
+        assert tuned, "tuned discover returned nothing"
+        assert tuned[0]["server"] == "github"
+        assert tuned[0]["tool"] == "search_pull_requests"
+
     async def test_discover_respects_semantic_fallback_threshold_override(self) -> None:
         manager = CatalogManager(
             RegistryConfig(

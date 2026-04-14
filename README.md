@@ -36,6 +36,126 @@ Internally it adds bounded discovery, ranking, caching, per-server concurrency/t
 
 ---
 
+## Benchmarks
+
+Everything below is reproducible from [`benchmarks/`](./benchmarks/). We built a
+300-server / 4,314-tool corpus by pulling every MCP we could reach from
+[smithery.ai](https://smithery.ai/docs/concepts/registry_search_servers) and
+[mcpservers.org/official](https://mcpservers.org/official) — see
+`benchmarks/scripts/fetch_mcps.py` and `benchmarks/data/mcp_catalog.json` for
+the raw catalog and attribution.
+
+Each plot is generated directly from that catalog so you can re-run the full
+suite on your own hardware:
+
+```bash
+python benchmarks/scripts/fetch_mcps.py            # ~300 MCPs, ~4.3k tools
+python benchmarks/scripts/generate_golden_set.py   # 500 golden queries
+python benchmarks/scripts/run_benchmark.py         # tokens + latency plots
+python benchmarks/scripts/tune_discovery.py        # accuracy + parameter tuning
+```
+
+For end-to-end validation against a live model instead of the
+`tokens / throughput` heuristic, `benchmarks/scripts/run_real_benchmark.py`
+drives the same naive-vs-lazy comparison through `google-genai` — one call
+per naive turn, three calls (`discover → inspect → execute`) per lazy turn
+— and records API-reported prompt tokens + wall-clock. It needs
+`GOOGLE_API_KEY` and `pip install google-genai`; see
+[`benchmarks/README.md`](./benchmarks/README.md#real-world-gemini-benchmark-optional)
+for the full invocation.
+
+### 1. Model-facing tokens stay flat as the MCP pool grows
+
+![Tokens vs MCP pool size](./benchmarks/plots/tokens.png)
+
+The naive integration dumps every tool schema into the prompt on every turn.
+`adk-lazy-mcp` only ever exposes its three meta-tools, so the prompt-side tool
+surface is constant. At 100 connected servers (1,341 tools, sampled from the
+Smithery + mcpservers.org catalog):
+
+| Pool size | Tools in prompt | Naive tokens | Lazy tokens | Reduction |
+|----------:|----------------:|-------------:|------------:|----------:|
+|        10 |              45 |        7,163 |         766 |    **9×** |
+|        20 |             214 |       43,256 |         766 |   **56×** |
+|        40 |             428 |      103,294 |         766 |  **135×** |
+|        50 |             538 |      140,371 |         766 |  **183×** |
+|       100 |           1,341 |      311,157 |         766 |  **406×** |
+
+Token counts use the OpenAI `cl100k_base` tokenizer.
+
+### 2. Steady-state per-turn latency is ~210× lower at N=100
+
+![Per-turn latency vs MCP pool size](./benchmarks/plots/latency.png)
+
+Even with a generous prompt-processing budget of 20k tokens/sec and only 10 ms
+per MCP round-trip, a naive prompt spends almost all its latency re-ingesting
+tool schemas every turn. `LazyMCPToolset` pays the `discover → inspect →
+execute` cost up-front once per session and is effectively constant afterwards:
+
+| Pool size | Naive latency / turn | Lazy latency / turn | Speed-up |
+|----------:|---------------------:|--------------------:|---------:|
+|        10 |               369 ms |                51 ms |  **7×** |
+|        20 |             2,174 ms |                56 ms | **39×** |
+|        40 |             5,175 ms |                58 ms | **89×** |
+|        50 |             7,029 ms |                61 ms |**114×** |
+|       100 |            15,569 ms |                74 ms |**210×** |
+
+Measured steady-state after warm-up (5 repeats per pool size) against a stub
+MCP backend with a 10 ms simulated RTT, so the numbers isolate the *prompt
+ingest vs. meta-tool round-trip* difference rather than network noise.
+
+### 3. Discovery accuracy: tuning on a real catalog lifts recall@1 by ~7.5×
+
+![Discovery accuracy: default vs tuned](./benchmarks/plots/accuracy.png)
+
+We generate an IDF-weighted golden query set from the catalog
+(`benchmarks/scripts/generate_golden_set.py`) — one natural-language query per
+tool, built from the rarest distinctive terms in its name + description — and
+grade `discover_mcp_tools` on `recall@1 / recall@5 / recall@10 / MRR@10`.
+
+Over **86 golden queries on 60 sampled MCPs**:
+
+| Metric     | Default config | Tuned on real catalog |     Gain |
+|------------|---------------:|----------------------:|---------:|
+| recall@1   |           0.10 |              **0.79** | **+656%** |
+| recall@5   |           0.31 |              **0.94** | **+200%** |
+| recall@10  |           0.47 |              **0.97** | **+108%** |
+| MRR@10     |           0.20 |              **0.86** | **+330%** |
+
+The biggest single win came from a cross-server ranking fix: pure per-server
+Reciprocal Rank Fusion gives *every* server's top match the same fused score,
+so with 60+ servers the final merge was effectively alphabetical. We added a
+small `global_score_weight` that lets a strong raw BM25 hit from one server
+out-rank a weak hit from another server, and tuning picked a non-zero value on
+the first sweep.
+
+The full tuning grid (5 retrieval axes × `global_score_weight`) is in
+`benchmarks/scripts/tune_discovery.py`. Dropping the tuned env file into your
+environment reproduces the gain without any code changes:
+
+```bash
+# benchmarks/data/tuned_retrieval_config.env
+export ADK_LAZY_MCP_RETRIEVAL__BM25_K1=1.2
+export ADK_LAZY_MCP_RETRIEVAL__BM25_B=0.5
+export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_WEIGHT=0.25
+export ADK_LAZY_MCP_RETRIEVAL__NAME_TERM_WEIGHT=5
+export ADK_LAZY_MCP_RETRIEVAL__SEMANTIC_RERANK_LIMIT=8
+export ADK_LAZY_MCP_RETRIEVAL__GLOBAL_SCORE_WEIGHT=0.02
+```
+
+### Catalog sources
+
+| Source | Servers fetched | Notes |
+|--------|----------------:|-------|
+| [smithery.ai registry](https://smithery.ai/docs/concepts/registry_search_servers) | 300 | Paginated `/servers` + per-server detail fetch for tool schemas. Requires a bearer token. |
+| [mcpservers.org/official](https://mcpservers.org/official) | 12 overlapping | HTML-scraped slugs cross-referenced against Smithery qualified names for attribution. |
+
+Raw catalog dump: [`benchmarks/data/mcp_catalog.json`](./benchmarks/data/mcp_catalog.json).
+Benchmark results JSON: [`benchmarks/data/results.json`](./benchmarks/data/results.json)
+and [`benchmarks/data/accuracy.json`](./benchmarks/data/accuracy.json).
+
+---
+
 ## Architecture and workflow
 
 ### Model-facing contract (always 3 tools)
@@ -208,8 +328,14 @@ export ADK_LAZY_MCP_RETRIEVAL__SCHEMA_PROPERTY_WEIGHT=3
 export ADK_LAZY_MCP_RETRIEVAL__REQUIRED_FIELD_WEIGHT=3
 export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_SIZE=4
 export ADK_LAZY_MCP_RETRIEVAL__TRIGRAM_WEIGHT=0.25
+export ADK_LAZY_MCP_RETRIEVAL__GLOBAL_SCORE_WEIGHT=0.02
 export ADK_LAZY_MCP_RETRIEVAL__CLUSTER_STOPWORDS='["and","for","file","tool"]'
 ```
+
+> **Tip:** `GLOBAL_SCORE_WEIGHT` is the single most impactful axis when you
+> connect many (10+) MCP servers. See the [benchmarks section](#benchmarks) for
+> why — it breaks cross-server ties that would otherwise collapse to
+> alphabetical ordering.
 
 ### 3) Policy engine
 
